@@ -43,6 +43,10 @@
 
 このREADME自体も、プロジェクトに合わせて編集してください。
 
+#### LICENSE.txt
+
+[LICENSE](LICENSE.txt)についても、特に著作者の表示を編集してください。
+
 ## ライセンス
 
 このリポジトリは [MITライセンス](LICENSE.txt) の下でライセンスされています。
@@ -88,6 +92,10 @@ Please edit the `2. Setting Up Development Environment` section to suit your pro
 #### README.md
 
 Feel free to edit this README itself to suit your project.
+
+#### LICENSE.txt
+
+Please edit the [LICENSE](LICENSE.txt) file, particularly the author attribution.
 
 ## License
 This repository is licensed under the [MIT License](LICENSE.txt).
