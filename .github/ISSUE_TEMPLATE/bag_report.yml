@@ -1,0 +1,63 @@
+name: Bug Report
+description: バグやエラーの報告はこちら
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: 何が起きたのか、簡潔に説明してください。
+      placeholder: ログイン画面でSubmitボタンを押すとアプリがクラッシュする...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected Area
+      description: どの領域の問題ですか？ (TODO.mdのAreaに対応します) 最も近いものを選んでください。
+      options:
+        - Core
+        - UI
+        - Inventory
+        - Order
+        - Analytics
+        - Menu
+        - DevOps
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction Steps
+      description: 再現手順を箇条書きで記述してください。
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, ブラウザ, Flutterバージョンなど
+      render: bash
+      value: |
+        - OS: 
+        - Flutter version: 
+    validations:
+      required: false
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: あなた自身でこのバグを修正するPRを作成する意思はありますか？
+      options:
+        - label: はい、私が修正してPRを出します (I am willing to submit a PR)

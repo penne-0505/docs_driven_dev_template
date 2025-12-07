@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/YOUR_ORG/YOUR_REPO/discussions
+    about: 質問や、Issueを作成するほどでもないこと、その他提案についてはこちらへ。
