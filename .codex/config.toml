@@ -1,0 +1,20 @@
+model = "gpt-5.2-codex"
+model_reasoning_effort = "medium"
+
+notify = ["bash", "-lc", "printf '\\a'"]
+
+[features]
+web_search_request = true
+unified_exec = true
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-35bd2bac-efdb-4126-b8b5-8fbadd2718f0"]
+
+[mcp_servers.ultracite]
+command = "npx"
+args = [
+  "-y",
+  "mcp-remote",
+  "https://www.ultracite.ai/api/mcp/mcp"
+]
