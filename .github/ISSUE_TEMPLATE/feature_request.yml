@@ -6,13 +6,13 @@ body:
   - type: markdown
     attributes:
       value: |
-        機能の提案ありがとうございます。まずは「なぜ必要なのか」を教えてください。
+        機能の提案ありがとうございます。いくつか簡単な質問にお答えください。
   - type: textarea
     id: problem
     attributes:
       label: Problem & Goal
       description: 解決したい課題、または達成したいゴールは何ですか？
-      placeholder: 現在の在庫一覧では、期限切れの商品が一目でわからないため...
+      placeholder: 現在の在庫一覧ページでは、期限切れの商品が一目でわからないため...
     validations:
       required: true
   - type: textarea
@@ -22,20 +22,11 @@ body:
       description: どのような解決策（機能）を想定していますか？
     validations:
       required: true
-  - type: dropdown
+  - type: textarea
     id: area
     attributes:
       label: Target Area
-      options:
-        - Core
-        - UI
-        - Inventory
-        - Order
-        - Analytics
-        - Menu
-        - DevOps
-        - Documentation
-        - New Area
+      placeholder: Core, UI, Inventory, etc.
     validations:
       required: true
   - type: checkboxes
@@ -44,4 +35,4 @@ body:
       label: Contribution
       description: あなた自身でこの機能を実装するPRを作成する意思はありますか？
       options:
-        - label: はい、私が実装してPRを出します (I am willing to submit a PR)
+        - label: はい、私が実装してPRを提出します。

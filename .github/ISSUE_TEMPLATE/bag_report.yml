@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        バグの報告ありがとうございます！いくつか簡単な質問にお答えください。
   - type: textarea
     id: description
     attributes:
@@ -15,21 +15,12 @@ body:
       placeholder: ログイン画面でSubmitボタンを押すとアプリがクラッシュする...
     validations:
       required: true
-  - type: dropdown
+  - type: textarea
     id: area
     attributes:
       label: Affected Area
-      description: どの領域の問題ですか？ (TODO.mdのAreaに対応します) 最も近いものを選んでください。
-      options:
-        - Core
-        - UI
-        - Inventory
-        - Order
-        - Analytics
-        - Menu
-        - DevOps
-        - Documentation
-        - Other
+      description: どの領域の問題ですか？ (TODO.mdのAreaに対応します) 最も近いものを入力してください。
+      placeholder: UI, Docs Core, etc.
     validations:
       required: true
   - type: textarea
@@ -47,7 +38,7 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: OS, ブラウザ, Flutterバージョンなど
+      description: OS, Flutterバージョンなど
       render: bash
       value: |
         - OS: 
@@ -60,4 +51,4 @@ body:
       label: Contribution
       description: あなた自身でこのバグを修正するPRを作成する意思はありますか？
       options:
-        - label: はい、私が修正してPRを出します (I am willing to submit a PR)
+        - label: はい、私が修正してPRを提出します。
