@@ -14,6 +14,9 @@
 2. **`_docs/standards/documentation_guidelines.md`**
    - ドキュメント体系、各ディレクトリの役割、front-matter の必須項目をまとめた実務ガイドラインです。
    - 執筆時のテンプレートやレビュー観点を確認する際に参照してください。
+3. **テンプレート集 (`_docs/standards/templates/`)**
+  - 各ドキュメント種別（draft/plan/intent/guide/reference/survey）向けの作成用テンプレートを配置しています。
+  - front-matter の6必須項目を含んだ初期雛形を用意しているので、コピーして日付やステータスを実情に合わせて更新してください。
 
 ## 利用者へのお願い
 - 新しいドキュメントを追加するときは、上記 2 文書を読み、運用・レビューの前提条件に矛盾がないかを確認してください。
@@ -22,6 +25,7 @@
 
 ## 最終更新の扱い
 - 本ファイルを更新した場合は、`_docs/standards/documentation_operations.md` と `_docs/standards/documentation_guidelines.md` の整合性を確認してください。
+- CI では markdownlint と front-matter/stale チェック（Deno スクリプト）が自動実行されます。archives 配下は除外。link-check は現状手動確認です。
 
 ## Front-matter クイックリファレンス
 
@@ -42,6 +46,11 @@
 | `references` | 関連ドキュメントへのリンク配列（ない場合は空配列 `[]`） |
 | `related_issues` | 関連Issueの番号配列 (ない場合は空配列 `[]`) |
 | `related_prs` | 関連PRの番号配列 (ない場合は空配列 `[]`) |
+
+（draft のみ任意で使用可）stale 管理フィールド:
+- `stale_exempt_until`: 延長の猶予期限 (`YYYY-MM-DD`)
+- `stale_exempt_reason`: 延長理由
+- `stale_extensions`: 延長回数（延長のたびに +1）
 
 
 ### よくある更新パターン
@@ -145,7 +154,7 @@ proposed → active → superseded
 | 状況 | 対応 |
 | --- | --- |
 | バグ修正などの小規模タスクだが Plan は必要か？ | **不要**です (Size \< M)。TODO.md の手順に従ってください。 |
-| draft が 30 日以上更新されていない | 昇格 / 延長 / クローズを判断 |
-| plan 承認前にアーカイブしてしまった | **ルール違反**。intent 承認後に改めて実行。PR で指摘されます |
+| draft が 30 日以上更新されていない | 昇格 / 延長 / クローズを判断。延長する場合は `stale_exempt_until` など任意フィールドを記録して猶予を明示 |
+| plan 承認前にアーカイブしてしまった | **ルール違反**。intent 承認後に改めて実行。 |
 | 複数の plan が同じ機能を記述している | 最新の plan をメインに、古い版は `superseded` に設定。archives へ移送 |
 | guide/reference が古い情報を含んでいる | reference は `status: active` の plan/intent のみ反映。古い版との同期ズレは修正 PR で対応 |

@@ -68,7 +68,7 @@
 5. 必要に応じて `CHANGELOG.md` や関連 Issue へ作業ログを残す。
 
 ## 必須フィールド一覧（全ドキュメント共通）
-全てのドキュメントは以下の6つの必須フィールドのみを持つ。
+全てのドキュメントは以下の6つの必須フィールドを持つ（draft は後述の任意フィールドを追加してもよい）。
 
 | フィールド | 説明 |
 | --- | --- |
@@ -80,6 +80,11 @@
 | `references` | 関連リンク配列（`[]` 許容） |
 | `related_issues` | 関連Issueの番号配列 (ない場合は空配列 `[]`) |
 | `related_prs` | 関連PRの番号配列 (ない場合は空配列 `[]`) |
+
+任意フィールド（draft の stale 管理向け）:
+- `stale_exempt_until: YYYY-MM-DD`
+- `stale_exempt_reason: <string>`
+- `stale_extensions: <number>`（延長ごとに+1）
 
 ## ドキュメント構造とテンプレート
 

@@ -110,6 +110,11 @@
 #### draft の TTL と保守
 - 各 draft は、`updated_at` から一定期間（既定30日）更新がない場合、stale と見なされる。
 - 必要に応じて昇格/クローズ/延長の判断を行う。
+  - 延長する場合は front-matter に任意フィールドを追加して記録すること:
+    - `stale_exempt_until: YYYY-MM-DD` — 猶予期限を明記
+    - `stale_exempt_reason: <string>` — 延長理由を簡潔に記載
+    - `stale_extensions: <number>` — 延長回数。延長のたびに+1
+  - intent 未承認のまま archives へ移動することは不可。延長中も意図が固まれば plan/intent への昇格を検討する。
 
 ### `_docs/standards/` - 開発ガイドライン・標準
 
@@ -134,10 +139,14 @@
 | `related_issues` | 関連Issueの番号配列 (ない場合は空配列 `[]`) |
 | `related_prs` | 関連PRの番号配列 (ない場合は空配列 `[]`) |
 
+> draft でのみ、stale 管理のために以下の任意フィールドを追加してもよい: `stale_exempt_until: YYYY-MM-DD`, `stale_exempt_reason: <string>`, `stale_extensions: <number>`（延長ごとに+1）。必須フィールド6項目のスキーマは維持すること。
+
 ## ドキュメント構造とテンプレート
 
 Front-matterを簡素化する代わりに、ドキュメント種別ごとに推奨されるMarkdownの見出し構造（テンプレート）を定義する。
 執筆者は以下の構造に従って本文を記述することで、必要な情報の網羅性を担保する。
+
+> 作成用の雛形は `_docs/standards/templates/` にあります。該当する種別（draft/plan/intent/guide/reference/survey）のファイルをコピーし、`created_at`/`updated_at`/`status`/`draft_status` などを実情に合わせて更新してください。
 
 ### 共通セクション（全ドキュメント推奨）
 
@@ -248,12 +257,12 @@ Front-matterを簡素化する代わりに、ドキュメント種別ごとに�
 
 ### 更新フロー
 
-1.  **大規模変更 (Size \>= M)**:
+1.  **大規模変更 (Size >= M)**:
 
       - 実装意図・設計メモを `_docs/draft/(対象)/` に記録してから実装を開始する。
       - または `_docs/plan/(対象)/` を作成・更新する。
 
-2.  **小規模変更 (Size \< M)**:
+2.  **小規模変更 (Size < M)**:
 
       - **特例**: `TODO.md` 上でタスク定義が明確（Stepsに手順記載済み）であり、かつ意図が自明な修正（バグ修正や軽微なリファクタリング）の場合、**`draft` の作成を省略できる**。
       - この場合、コミットメッセージやPRのDescriptionに実装意図を含めることで代替とする。
@@ -264,16 +273,16 @@ Front-matterを簡素化する代わりに、ドキュメント種別ごとに�
 
 ### 更新タイミング
 
-  - **優先度**: 明確に設けないが、暗黙的に「新機能 \> リファクタリング」順になる可能性（排除しない）
+  - **優先度**: 明確に設けないが、暗黙的に「新機能 > リファクタリング」順になる可能性（排除しない）
   - **時間経過**: 実装時の意図や目的がブレやすいため、コミット時のメモ作成を重視
 
 ### 整合性チェック & 自動化
 
   - **手法**: lint（markdownlint-cli2） / link-check（lychee） / front-matter 検証を使用。
-  - **現状**: 自動化フェーズの移行中。CI 未導入の項目はレビュー時に手動確認する。
+  - **現状**: markdownlint と front-matter/stale チェックは CI（GitHub Actions: markdownlint-cli2-action + Deno スクリプト）で自動実行。archives 配下は除外。link-check は未導入のため手動確認。
   - **対応ルール**:
     1.  **発見時対応**: 問題を見つけた人が修正または Issue 作成。Issue 番号は該当ドキュメントの `front-matter` の `related_issues` に追記。
-    2.  **優先度**: 実害のある不整合 \> 表記の不統一 \> 軽微な古い情報。
+    2.  **優先度**: 実害のある不整合 > 表記の不統一 > 軽微な古い情報。
     3.  **修正範囲**: 関連する `guide/` や `reference/` を同時に確認し、必要なら plan / intent も更新する。
 
 ### 品質保証
