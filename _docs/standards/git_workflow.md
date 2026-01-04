@@ -70,7 +70,7 @@ feat(Core): implement user authentication logic
 Ref: Core-Feat-25
 ```
 
-## 3\. プルリクエスト (PR) 運用
+## 3. プルリクエスト (PR) 運用
 
 ### タイトル
 
@@ -95,7 +95,7 @@ PR作成時は以下の情報を必ず記載する（テンプレート利用を
   - `TODO.md` の `Steps` に記載された項目が達成されていること。
   - 新機能・仕様変更の場合、ドキュメント（`guide` / `reference`）の更新が含まれていること。
 
-## 4\. LLM / AI Agent 利用ガイドライン
+## 4. LLM / AI Agent 利用ガイドライン
 
 AIエージェントがコードを生成・コミットする場合の特記事項。
 

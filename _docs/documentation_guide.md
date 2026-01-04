@@ -62,7 +62,7 @@ related_issues: []
 related_prs: []
 ```
 
-#### 2\. draft で検討を進める
+#### 2. draft で検討を進める
 
 ```yaml
 # draft_status を更新
@@ -72,7 +72,7 @@ updated_at: 2023-11-25
 
 (更新部分のみ記載)
 
-#### 3\. draft から plan へ昇格
+#### 3. draft から plan へ昇格
 
   - `_docs/plan/` に移動
   - `draft_status` を `n/a` に変更
@@ -90,14 +90,14 @@ related_issues: []
 related_prs: []
 ```
 
-#### 4\. plan 実装完了時
+#### 4. plan 実装完了時
 
 ```yaml
 status: active
 updated_at: 2023-12-10
 ```
 
-#### 5\. plan から intent へ移行
+#### 5. plan から intent へ移行
 
   - `_docs/intent/` に新しいドキュメントを作成
   - `references` に plan へのリンクを追加
@@ -116,7 +116,7 @@ related_issues: []
 related_prs: []
 ```
 
-#### 6\. ドキュメント廃止・置き換え
+#### 6. ドキュメント廃止・置き換え
 
 ```yaml
 status: superseded
