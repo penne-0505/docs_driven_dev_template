@@ -1,7 +1,7 @@
 # Project Task Management Rules
 
 ## 0. System Metadata
-- **Current Max ID**: `Next ID No: 1` (※タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 10` (※タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一のID発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -185,6 +185,65 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 ---
 
 ## Backlog
+
+- **Title**: [Chore] Customize Issue Templates Area sections
+- **ID**: Docs-Chore-1
+- **Priority**: P1
+- **Size**: S
+- **Area**: Docs
+- **Dependencies**: []
+- **Goal**: `.github/ISSUE_TEMPLATE/bug_report.yml` と `.github/ISSUE_TEMPLATE/feature_request.yml` の "Area" セクションがプロジェクトに適した内容に変更されている。
+- **Steps**:
+  1. [ ] `.github/ISSUE_TEMPLATE/bug_report.yml` を開き、"Area" セクションを確認
+  2. [ ] プロジェクトに適した領域名に変更
+  3. [ ] `.github/ISSUE_TEMPLATE/feature_request.yml` を開き、同様に変更
+  4. [ ] 変更内容を検証
+- **Description**: GitHub Issueテンプレートの"Area"セクションを、プロジェクト固有の内容にカスタマイズする。
+- **Plan**: None
+
+- **Title**: [Chore] Review and customize AGENTS.md
+- **ID**: Docs-Chore-2
+- **Priority**: P2
+- **Size**: XS
+- **Area**: Docs
+- **Dependencies**: []
+- **Goal**: `AGENTS.md` がプロジェクトのニーズに応じて必要に応じて編集されている。
+- **Steps**:
+  1. [ ] `AGENTS.md` を開き、既存の内容を確認
+  2. [ ] 必要に応じて編集（特定コマンドの使用指示など）
+  3. [ ] 変更を保存
+- **Description**: AGENTS.mdをレビューし、プロジェクトの要件に応じてカスタマイズする。
+- **Plan**: None
+
+- **Title**: [Chore] Customize README.md for project
+- **ID**: Docs-Chore-4
+- **Priority**: P0
+- **Size**: S
+- **Area**: Docs
+- **Dependencies**: []
+- **Goal**: `README.md` がプロジェクトの概要、目的、使用方法に合わせて編集されている。
+- **Steps**:
+  1. [ ] 現在のREADME.mdを確認
+  2. [ ] プロジェクト名、概要、説明をプロジェクトに合わせて書き換え
+  3. [ ] 使用方法セクションを編集
+  4. [ ] 不要なテンプレート固有の記述を削除または修正
+  5. [ ] 変更を保存
+- **Description**: README.mdをテンプレートからプロジェクト固有の内容に書き換える。
+- **Plan**: None
+
+- **Title**: [Chore] Update LICENSE.txt author attribution
+- **ID**: Docs-Chore-5
+- **Priority**: P2
+- **Size**: XS
+- **Area**: Docs
+- **Dependencies**: []
+- **Goal**: `LICENSE.txt` の著作者名が正しいものに編集されている。
+- **Steps**:
+  1. [ ] `LICENSE.txt` を開き、著作者名を確認
+  2. [ ] 正しい著作者名に編集
+  3. [ ] 変更を保存
+- **Description**: LICENSEファイルの著作者表示をプロジェクトに合わせて更新する。
+- **Plan**: None
 
 ---
 
