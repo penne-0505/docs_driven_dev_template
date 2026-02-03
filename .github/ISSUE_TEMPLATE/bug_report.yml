@@ -38,11 +38,11 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: OS, Flutterバージョンなど
+      description: OS、ランタイムバージョンなど（例：Node.js, Python, Dockerなど）
       render: bash
       value: |
         - OS: 
-        - Flutter version: 
+        - ランタイム/バージョン: 
     validations:
       required: false
   - type: checkboxes
