@@ -1,7 +1,7 @@
 # Project Task Management Rules
 
 ## 0. System Metadata
-- **Current Max ID**: `Next ID No: 10` (※タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 5` (※タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一のID発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -216,7 +216,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - **Plan**: None
 
 - **Title**: [Chore] Customize README.md for project
-- **ID**: Docs-Chore-4
+- **ID**: Docs-Chore-3
 - **Priority**: P0
 - **Size**: S
 - **Area**: Docs
@@ -232,7 +232,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - **Plan**: None
 
 - **Title**: [Chore] Update LICENSE.txt author attribution
-- **ID**: Docs-Chore-5
+- **ID**: Docs-Chore-4
 - **Priority**: P2
 - **Size**: XS
 - **Area**: Docs
