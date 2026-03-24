@@ -1,31 +1,31 @@
 # Documentation Guide
 
-**必読:** ドキュメントのアーカイブ運用・承認フローに関する最新ルールは、常に `_docs/standards/documentation_operations.md` を参照して遵守してください。
+**必読:** ドキュメントのアーカイブ運用フローに関する最新ルールは、常に `_docs/standards/documentation_operations.md` を参照して遵守してください。
 
 ## このガイドの位置づけ
 - このプロジェクトでドキュメントを作成・更新する際のルールについて、よく使われる要点だけをまとめたクイックリファレンスです。
 - 迷ったときは、まず本ファイルから関連ドキュメントを辿り、必須ポリシーを確認してください。
-- 詳細な執筆・レビュー手順は `_docs/standards/documentation_guidelines.md`、アーカイブ運用や承認プロセスは `_docs/standards/documentation_operations.md` を必ず確認します。
+- 詳細な執筆手順は `_docs/standards/documentation_guidelines.md`、アーカイブ運用プロセスは `_docs/standards/documentation_operations.md` を必ず確認します。
 
 ## 参照すべき中核ドキュメント
 1. **`_docs/standards/documentation_operations.md`**
    - 一時ドキュメント (`draft`/`plan`/`survey`) から `intent` への移行、`_docs/archives/` へのアーカイブ手順、違反時の対処までを規定しています。
-   - `intent` 承認前のアーカイブ禁止など、レビュープロセスで必須となるルールが整理されています。
+   - `intent` 作成前のアーカイブ禁止など、運用上の必須ルールが整理されています。
 2. **`_docs/standards/documentation_guidelines.md`**
    - ドキュメント体系、各ディレクトリの役割、front-matter の必須項目をまとめた実務ガイドラインです。
-   - 執筆時のテンプレートやレビュー観点を確認する際に参照してください。
+   - 執筆時のテンプレートや確認観点を確認する際に参照してください。
 3. **テンプレート集 (`_docs/standards/templates/`)**
   - 各ドキュメント種別（draft/plan/intent/guide/reference/survey）向けの作成用テンプレートを配置しています。
-  - front-matter の6必須項目を含んだ初期雛形を用意しているので、コピーして日付やステータスを実情に合わせて更新してください。
+  - front-matter の8必須項目を含んだ初期雛形を用意しているので、コピーして日付やステータスを実情に合わせて更新してください。
 
 ## 利用者へのお願い
-- 新しいドキュメントを追加するときは、上記 2 文書を読み、運用・レビューの前提条件に矛盾がないかを確認してください。
-- `intent` 承認後にアーカイブを行う場合は、PR の説明欄で対象ドキュメントと移行先を明示し、レビュワーにも周知してください。
+- 新しいドキュメントを追加するときは、上記 2 文書を読み、運用前提に矛盾がないかを確認してください。
+- `intent` 作成後にアーカイブを行う場合は、対象ドキュメントと移行先の整合性を確認してください。
 - ガイドラインに改善点を見つけた場合は、`_docs/draft/` で議論を開始し、合意形成後に標準ドキュメントを更新してください。
 
 ## 最終更新の扱い
 - 本ファイルを更新した場合は、`_docs/standards/documentation_operations.md` と `_docs/standards/documentation_guidelines.md` の整合性を確認してください。
-- CI では markdownlint と front-matter/stale チェック（Deno スクリプト）が自動実行されます。archives 配下は除外。link-check は現状手動確認です。
+- CI では markdownlint と front-matter/stale チェック（Deno スクリプト）が自動実行されます。front-matter/stale チェックでは `archives` と `_docs/standards/` 配下を除外します。link-check は未導入であり、現時点では必須運用に含めません。
 
 ## Front-matter クイックリファレンス
 
@@ -34,7 +34,7 @@
 
 ### 必須フィールド一覧（全ドキュメント共通）
 
-全てのドキュメントで以下の6項目が必須です。
+全てのドキュメントで以下の8項目が必須です。
 
 | フィールド | 説明 |
 | --- | --- |
@@ -110,6 +110,7 @@ updated_at: 2023-12-10
 
   - `_docs/intent/` に新しいドキュメントを作成
   - `references` に plan へのリンクを追加
+  - intent 作成後、対応する plan 原本を `_docs/archives/plan/` へ移送
 
 <!-- end list -->
 
@@ -155,6 +156,6 @@ proposed → active → superseded
 | --- | --- |
 | バグ修正などの小規模タスクだが Plan は必要か？ | **不要**です (Size \< M)。TODO.md の手順に従ってください。 |
 | draft が 30 日以上更新されていない | 昇格 / 延長 / クローズを判断。延長する場合は `stale_exempt_until` など任意フィールドを記録して猶予を明示 |
-| plan 承認前にアーカイブしてしまった | **ルール違反**。intent 承認後に改めて実行。 |
+| intent 作成前に plan をアーカイブしてしまった | **ルール違反**。対応する intent を作成してから改めて実行。 |
 | 複数の plan が同じ機能を記述している | 最新の plan をメインに、古い版は `superseded` に設定。archives へ移送 |
 | guide/reference が古い情報を含んでいる | reference は `status: active` の plan/intent のみ反映。古い版との同期ズレは修正 PR で対応 |

@@ -49,7 +49,7 @@
 | **ID** | `String` | `{Area}-{Category}-{Number}` 形式。不変の一意キー。 |
 | **Priority** | `Enum` | `P0` (Critical), `P1` (High), `P2` (Medium), `P3` (Low) |
 | **Size** | `Enum` | `XS` (<0.5d), `S` (1d), `M` (2-3d), `L` (1w), `XL` (>2w) |
-| **Area** | `Enum` | `_docs/plan/` 直下のディレクトリ名と一致する値。 |
+| **Area** | `Enum` | タスクの論理的な対象領域を表す値。`Plan` がある場合は原則として `_docs/plan/<Area>/...` 配下に対応付ける。 |
 | **Dependencies**| `List<ID>`| 依存タスクIDの配列 `[Core-Feat-1, UI-Bug-2]`。なしは `[]`。 |
 | **Goal** | `String` | 完了条件（Definition of Done）。 |
 | **Steps** | `Markdown` | 進行管理用のチェックリスト（詳細は後述）。 |
@@ -59,9 +59,12 @@
 ## 3. Field Usage Guidelines
 
 ### Area & Directory Mapping
-- **Rule**: `Area` フィールドの値は、`_docs/plan/` 直下に実在するディレクトリ名（ドメイン）と一致させること。
-- **New Area**: 新しい領域のタスクを作成する場合、まず `_docs/plan/` にディレクトリを作成してから、その名前を `Area` に指定する。
-- **Example**: `Area: Core` -> implies existence of `_docs/plan/Core/`
+- **Rule**: `Area` フィールドはタスクの論理的な対象領域を表す分類ラベルとして扱う。
+- **Planとの対応**: `Plan` が存在する場合は、原則として `Area` に対応する `_docs/plan/<Area>/...` 配下へ配置する。
+- **New Area**: 新しい領域のタスクを作成する場合、`Size >= M` などで `Plan` が必要になった時点で、必要に応じて `_docs/plan/<Area>/` を作成する。
+- **Example**:
+  - `Area: Core` かつ `Plan: _docs/plan/Core/auth-feature.md`
+  - `Area: Docs` かつ `Plan: None`
 
 ### Steps vs Plan
 タスクの規模に応じて `Steps` の記述方針を切り替えること。情報の二重管理を避ける。
@@ -89,7 +92,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - `Chore` (Maintenance/Misc)
 
 ### Areas (Examples)
-**※実際には `_docs/plan/` のディレクトリ構成に従う。**
+**※`Area` は論理的な分類ラベルであり、`Plan` がある場合に原則 `_docs/plan/<Area>/...` と対応する。**
 - `Core`: 基盤ロジック
 - `UI`: プレゼンテーション層
 - `Docs`: ドキュメント整備自体
@@ -160,7 +163,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 
 ### Case C: New Area / Doc Task (Size S)
 
-**Rule**: 新しいAreaが必要な場合、ディレクトリ作成を含む。
+**Rule**: `Plan: None` のタスクでは、Area定義のためだけに `_docs/plan/` 配下のディレクトリ作成は不要。
 
 ```markdown
 - **Title**: [Doc] Add Deployment Guide
@@ -171,8 +174,8 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - **Dependencies**: [Core-Feat-25]
 - **Goal**: 新メンバー向けのデプロイ手順書が `_docs/guide/deployment.md` に作成されている。
 - **Steps**:
-  1. [ ] `_docs/plan/DevOps/` ディレクトリが存在しないため作成する (Area定義用)
-  2. [ ] `_docs/guide/deployment.md` を作成し、ステージング環境へのデプロイ手順を記述
+  1. [ ] `_docs/guide/deployment.md` を作成し、ステージング環境へのデプロイ手順を記述
+  2. [ ] 必要に応じて関連する参照先やリンクを更新
 - **Description**: オンボーディングコスト削減のため、暗黙知になっているデプロイ手順をドキュメント化する。
 - **Plan**: None
 ```
@@ -252,4 +255,3 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 ---
 
 ## In Progress
-

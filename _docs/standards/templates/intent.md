@@ -9,7 +9,7 @@ related_issues: []
 related_prs: []
 ---
 
-<!-- 設計判断の背景と根拠を簡潔に記録。関連する plan や draft を references に追記し、意思決定後は archives 移送を検討してください。 -->
+<!-- 設計判断の背景と根拠を簡潔に記録。関連する plan や draft を references に追記し、intent 作成後は archives 移送を検討してください。 -->
 
 ## Context
 - 背景と課題

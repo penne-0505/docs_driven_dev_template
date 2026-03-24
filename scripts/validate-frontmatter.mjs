@@ -1,4 +1,4 @@
-// Deno版バリデータ: npm依存なしで front-matter と stale ロジックを検証
+// Deno版バリデータ: npm依存なしで運用対象ドキュメントの front-matter と stale ロジックを検証
 import { expandGlob } from "https://deno.land/std@0.208.0/fs/expand_glob.ts";
 import { extract } from "https://deno.land/std@0.208.0/front_matter/any.ts";
 import { sep } from "https://deno.land/std@0.208.0/path/mod.ts";
@@ -35,6 +35,7 @@ const diffDays = (from, to) =>
 	Math.floor((to.getTime() - from.getTime()) / MS_PER_DAY);
 const isInArchives = (path) => path.split(sep).includes("archives");
 const isDraftPath = (path) => path.split(sep).includes("draft");
+const isInStandards = (path) => path.split(sep).includes("standards");
 
 const loadFrontMatter = async (file) => {
 	const src = await Deno.readTextFile(file);
@@ -51,6 +52,7 @@ const run = async () => {
 		if (!entry.isFile) continue;
 		const file = entry.path;
 		if (isInArchives(file)) continue;
+		if (isInStandards(file)) continue;
 
 		const data = await loadFrontMatter(file);
 		const fileErrors = [];
