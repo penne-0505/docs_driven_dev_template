@@ -1,7 +1,7 @@
 # Project Task Management Rules
 
 ## 0. System Metadata
-- **Current Max ID**: `Next ID No: 5` (※タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 4` (※タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一のID発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -189,23 +189,9 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 
 ## Backlog
 
-- **Title**: [Chore] Customize Issue Templates Area sections
-- **ID**: Docs-Chore-1
-- **Priority**: P1
-- **Size**: S
-- **Area**: Docs
-- **Dependencies**: []
-- **Goal**: `.github/ISSUE_TEMPLATE/bug_report.yml` と `.github/ISSUE_TEMPLATE/feature_request.yml` の "Area" セクションがプロジェクトに適した内容に変更されている。
-- **Steps**:
-  1. [ ] `.github/ISSUE_TEMPLATE/bug_report.yml` を開き、"Area" セクションを確認
-  2. [ ] プロジェクトに適した領域名に変更
-  3. [ ] `.github/ISSUE_TEMPLATE/feature_request.yml` を開き、同様に変更
-  4. [ ] 変更内容を検証
-- **Description**: GitHub Issueテンプレートの"Area"セクションを、プロジェクト固有の内容にカスタマイズする。
-- **Plan**: None
 
 - **Title**: [Chore] Review and customize AGENTS.md
-- **ID**: Docs-Chore-2
+- **ID**: Docs-Chore-1
 - **Priority**: P2
 - **Size**: XS
 - **Area**: Docs
@@ -219,7 +205,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - **Plan**: None
 
 - **Title**: [Chore] Customize README.md for project
-- **ID**: Docs-Chore-3
+- **ID**: Docs-Chore-2
 - **Priority**: P0
 - **Size**: S
 - **Area**: Docs
@@ -235,7 +221,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - **Plan**: None
 
 - **Title**: [Chore] Update LICENSE.txt author attribution
-- **ID**: Docs-Chore-4
+- **ID**: Docs-Chore-3
 - **Priority**: P2
 - **Size**: XS
 - **Area**: Docs
