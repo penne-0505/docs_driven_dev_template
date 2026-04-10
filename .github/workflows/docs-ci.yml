@@ -19,6 +19,7 @@ jobs:
           globs: |
             _docs/**/*.md
             !_docs/archives/**/*
+            !_docs/standards/templates/**/*
           config: .markdownlint.jsonc
 
       - name: Setup Deno
