@@ -1,6 +1,6 @@
 ---
 name: post-implementation
-description: Use after completing implementation to wrap up work, update documentation, archive TODOs, and communicate what was changed.
+description: Use after code changes are complete and before final response or PR summary.
 ---
 
 # Post-Implementation
@@ -33,6 +33,7 @@ This skill focuses on the closure phase: update documentation, archive or remove
 ## Change Communication
 
 Include in your summary:
+
 - What was implemented (features, fixes, refactors).
 - Files/modules touched.
 - Breaking changes or migrations required.
@@ -56,6 +57,7 @@ Apply this skill whenever you finish implementation work—features, bug fixes, 
 Before proceeding, check if documentation was created during implementation:
 
 **Look for these directories:**
+
 - `_docs/draft/(feature)/`
 - `_docs/plan/(feature)/`
 - `_docs/intent/(feature)/`
@@ -66,11 +68,13 @@ Before proceeding, check if documentation was created during implementation:
 ### Branching Logic
 
 **If NO documentation exists:**
+
 - Update TODO.md with completion status
 - Summarize changes for communication
 - Skip documentation-specific cleanup
 
 **If documentation EXISTS:**
+
 1. Update existing documents to reflect final implementation
 2. Create guide/ and reference/ if they don't exist (recommended for public APIs)
 3. Archive temporary documents (draft/plan/survey) after intent approval

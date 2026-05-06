@@ -1,6 +1,6 @@
 ---
 name: docs-prep
-description: Use when preparing documentation for large implementations (Size >= M) following the _docs/ hierarchy and lifecycle rules.
+description: Use after implementation-prep when the change is Size >= M or requires design decisions.
 ---
 
 # Documentation Preparation
@@ -10,6 +10,7 @@ This skill focuses on creating documentation before large implementations, follo
 ## When to Use
 
 Use this skill for **large changes (Size >= M)** or when design decisions need to be recorded:
+
 - New features requiring architecture decisions
 - Breaking changes or migrations
 - Complex refactors affecting multiple components
@@ -23,12 +24,12 @@ For small changes (Size < M), use **implementation-prep** alone and skip this sk
 
 Based on the implementation size and complexity:
 
-| Change Type | Required Documents |
-|-------------|-------------------|
+| Change Type               | Required Documents                             |
+| ------------------------- | ---------------------------------------------- |
 | Large feature (Size >= M) | draft/ → plan/ → intent/ → guide/ + reference/ |
-| Breaking change | plan/ + intent/ (migration guide) |
-| Architecture decision | intent/ (ADR-style) |
-| Research-heavy feature | survey/ → plan/ → intent/ |
+| Breaking change           | plan/ + intent/ (migration guide)              |
+| Architecture decision     | intent/ (ADR-style)                            |
+| Research-heavy feature    | survey/ → plan/ → intent/                      |
 
 ### 2. Create Draft Documentation
 
@@ -49,19 +50,23 @@ related_prs: []
 ---
 
 ## Hypothesis
+
 - What we're trying to solve
 - Expected outcomes
 
 ## Options / Alternatives
+
 - Approach A: Pros/Cons
 - Approach B: Pros/Cons
 
 ## Open Questions
+
 - Technical constraints to investigate
 - Design decisions pending
 ```
 
 **Key Points**:
+
 - Use `draft_status: exploring` while investigating
 - Update `updated_at` regularly (30-day stale limit)
 - Link to related TODO.md entries
@@ -85,30 +90,38 @@ related_prs: []
 ---
 
 ## Overview
+
 Brief description of the feature.
 
 ## Scope
+
 - Features to implement
 - Impact areas
 
 ## Non-Goals
+
 - Out of scope items
 
 ## Requirements
+
 - **Functional**: Feature requirements
 - **Non-Functional**: Performance, security, etc.
 
 ## Tasks
+
 Implementation task breakdown.
 
 ## Test Plan
+
 Testing strategy and verification points.
 
 ## Deployment / Rollout
+
 Deployment procedures and rollback strategy.
 ```
 
 **Key Points**:
+
 - Must include Scope, Non-Goals, Requirements
 - Define Test Plan and Rollback strategy
 - Link related issues/PRs in front-matter
@@ -132,19 +145,24 @@ related_prs: []
 ---
 
 ## Context
+
 Background and problem statement.
 
 ## Decision
+
 The chosen approach.
 
 ## Consequences
+
 Impact of this decision.
 
 ## Alternatives Considered
+
 Other options and why they were rejected.
 ```
 
 **Key Points**:
+
 - Focus on "why" not "what"
 - Reference the plan document
 - Record trade-offs explicitly
@@ -152,21 +170,24 @@ Other options and why they were rejected.
 ## Document Hierarchy Rules
 
 ### Naming Convention
+
 Directory name `(対象)` must match TODO.md **Area** field:
+
 - If renaming directory, update TODO.md Area simultaneously
 - Use kebab-case for multi-word names
 
 ### Status Transitions
 
-| From | To | Condition |
-|------|-----|-----------|
-| draft/ | plan/ | Scope and requirements are clear |
-| plan/ | intent/ | Design decisions are finalized |
+| From    | To        | Condition                            |
+| ------- | --------- | ------------------------------------ |
+| draft/  | plan/     | Scope and requirements are clear     |
+| plan/   | intent/   | Design decisions are finalized       |
 | intent/ | archives/ | Approved and implementation complete |
-| draft/ | survey/ | Research findings need formalization |
-| survey/ | plan/ | Research complete, ready to plan |
+| draft/  | survey/   | Research findings need formalization |
+| survey/ | plan/     | Research complete, ready to plan     |
 
 ### Stale Management
+
 - Drafts: 30-day TTL from `updated_at`
 - Extensions: Add `stale_exempt_until`, `stale_exempt_reason`, `stale_extensions`
 - Never archive draft/plan/survey without intent approval
@@ -180,6 +201,7 @@ Directory name `(対象)` must match TODO.md **Area** field:
 ## Deliverables
 
 Before starting implementation:
+
 - [ ] Draft notes in `_docs/draft/(feature)/` (exploring phase)
 - [ ] Plan document in `_docs/plan/(feature)/` (if Size >= M)
 - [ ] Intent document in `_docs/intent/(feature)/` (if design decisions needed)
