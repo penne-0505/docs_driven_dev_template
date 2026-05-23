@@ -12,11 +12,15 @@
 
 **詳細については [ガイドライン](_docs/documentation_guide.md) を参照してください。**
 
+初めて使う場合は、まず [Quickstart](QUICKSTART.md) を読んでください。
+
 ## 使用方法
 
 1. このリポジトリをフォークまたはクローンします。
 2. プロジェクトに合わせてドキュメントと設定ファイルを編集します。
 3. 開発を開始します。
+
+配布用 ZIP を作る場合は、`.git` / `.jj` などの VCS メタデータを含めないために、GitHub 標準アーカイブまたは `scripts/create-template-archive.sh` を使用してください。
 
 ### カスタマイズ
 
@@ -50,11 +54,15 @@ While humans can run the cycle, it is primarily designed **for coding agents lik
 
 **For more details, please refer to the [Guidelines](_docs/documentation_guide.md).**
 
+If this is your first time using the template, start with the [Quickstart](QUICKSTART.md).
+
 ## Usage
 
 1. Fork or clone this repository.
 2. Edit the documentation and configuration files to suit your project.
 3. Start development.
+
+When creating a distribution ZIP, use GitHub's standard archive or `scripts/create-template-archive.sh` so VCS metadata such as `.git` / `.jj` is not included.
 
 ### Customization
 

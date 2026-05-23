@@ -5,12 +5,12 @@ description: Use after code changes are complete and before final response or PR
 
 # Post-Implementation
 
-This skill focuses on the closure phase: update documentation, archive or remove completed TODOs, and communicate the changes so the team and codebase stay synchronized.
+This skill focuses on the closure phase: update documentation, remove completed TODO entries from TODO.md, and communicate the changes so the team and codebase stay synchronized.
 
 ## Closure Flow
 
 1. **Verify completion.** Confirm the work matches the original plan and acceptance criteria.
-2. **Update TODO.md.** Mark completed tasks as done, remove them, or move them to a "Done" section. Add follow-up tasks if needed.
+2. **Update TODO.md.** Remove completed tasks from TODO.md after confirming their Goal. Add follow-up tasks if needed.
 3. **Update documentation.** Revise relevant docs (READMEs, API docs, design docs) to reflect changes. Update timestamps and authors.
 4. **Summarize changes.** Prepare a clear summary of what was done, why, and any breaking changes or migrations needed.
 5. **Communicate.** Share the summary with the team, link to PRs/commits, and note any follow-up work.
@@ -25,8 +25,9 @@ This skill focuses on the closure phase: update documentation, archive or remove
 
 ## TODO.md Cleanup
 
-- Move completed items to a "Done" or "Archived" section with completion date.
-- Remove fully completed items if keeping history elsewhere.
+- Remove fully completed items from TODO.md.
+- Keep completion history in PRs, commits, CHANGELOG, intent, guide, or reference documents.
+- Do not create or use Done / Archived sections in TODO.md.
 - Add new TODOs for discovered issues or technical debt.
 - Update priorities and assignments for remaining items.
 
@@ -43,7 +44,7 @@ Include in your summary:
 
 ## Deliverables After Implementation
 
-- Updated TODO.md with completed items marked/archived.
+- Updated TODO.md with completed items removed and follow-up tasks added if needed.
 - Updated documentation reflecting the current state.
 - Written summary of changes.
 - Communication to stakeholders (PR description, Slack message, etc.).
@@ -58,12 +59,12 @@ Before proceeding, check if documentation was created during implementation:
 
 **Look for these directories:**
 
-- `_docs/draft/(feature)/`
-- `_docs/plan/(feature)/`
-- `_docs/intent/(feature)/`
-- `_docs/survey/(feature)/`
-- `_docs/guide/(feature)/` (may need creation/updates)
-- `_docs/reference/(feature)/` (may need creation/updates)
+- `_docs/draft/<Area>/<slug>/notes.md`
+- `_docs/plan/<Area>/<slug>/plan.md`
+- `_docs/intent/<Area>/<slug>/decision.md`
+- `_docs/survey/<Area>/<slug>/survey.md`
+- `_docs/guide/<Area>/<slug>/usage.md` (may need creation/updates)
+- `_docs/reference/<Area>/<slug>/reference.md` (may need creation/updates)
 
 ### Branching Logic
 
@@ -77,5 +78,5 @@ Before proceeding, check if documentation was created during implementation:
 
 1. Update existing documents to reflect final implementation
 2. Create guide/ and reference/ if they don't exist (recommended for public APIs)
-3. Archive temporary documents (draft/plan/survey) after intent approval
-4. See `.codex/skills/docs-cleanup/SKILL.md` for full documentation workflow
+3. Archive temporary documents (draft/plan/survey) only after the corresponding intent exists and the archive checklist passes
+4. See the **docs-cleanup skill** for the full documentation workflow

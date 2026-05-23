@@ -15,7 +15,7 @@
 ### Phase 1: Backlog (Structured)
 - **Location**: `# Backlog` セクション
 - **Status**: タスクとして認識済みだが、着手準備未完了。
-- **Entry Criteria**: 
+- **Entry Criteria**:
   - IDが一意に採番されている。
   - 必須フィールド（Title, ID, Priority, Size, Area, Description）が埋まっている。
 - **Exit Condition**: `Ready` の要件を満たす。
@@ -36,9 +36,10 @@
 - **Status**: 現在実行中。
 - **Entry Criteria**: 作業者がアサインされている（または自律的に着手）。
 
-### Phase 4: Done
-- **Location**: なし（行削除）
-- **Exit Action**: `Goal` 達成を確認後、リストから物理削除する。
+### Phase 4: Completed
+- **Location**: なし（`TODO.md` から削除）
+- **Exit Action**: `Goal` 達成を確認後、完了タスクを `TODO.md` から削除する。
+- **History**: 完了履歴は PR / commit / CHANGELOG / intent / guide / reference に残す。`TODO.md` に Done / Archived セクションは作らない。
 
 ## 2. Schema & Validation
 各タスクは以下の厳格なスキーマに従うこと。
@@ -49,22 +50,34 @@
 | **ID** | `String` | `{Area}-{Category}-{Number}` 形式。不変の一意キー。 |
 | **Priority** | `Enum` | `P0` (Critical), `P1` (High), `P2` (Medium), `P3` (Low) |
 | **Size** | `Enum` | `XS` (<0.5d), `S` (1d), `M` (2-3d), `L` (1w), `XL` (>2w) |
-| **Area** | `Enum` | タスクの論理的な対象領域を表す値。`Plan` がある場合は原則として `_docs/plan/<Area>/...` 配下に対応付ける。 |
+| **Area** | `Enum` | タスクの論理的な対象領域を表す値。`Plan` がある場合は `_docs/plan/<Area>/<slug>/plan.md` の `<Area>` と一致させる。 |
 | **Dependencies**| `List<ID>`| 依存タスクIDの配列 `[Core-Feat-1, UI-Bug-2]`。なしは `[]`。 |
 | **Goal** | `String` | 完了条件（Definition of Done）。 |
 | **Steps** | `Markdown` | 進行管理用のチェックリスト（詳細は後述）。 |
 | **Description** | `String` | タスクの詳細。 |
-| **Plan** | `Path` | `Size >= M` の場合必須。`_docs/plan/` へのパス。`Size < M` は `None` 可。 |
+| **Plan** | `Path` | `Size >= M` の場合必須。`_docs/plan/<Area>/<slug>/plan.md` へのパス。`Size < M` は `None` 可。 |
 
 ## 3. Field Usage Guidelines
 
 ### Area & Directory Mapping
 - **Rule**: `Area` フィールドはタスクの論理的な対象領域を表す分類ラベルとして扱う。
-- **Planとの対応**: `Plan` が存在する場合は、原則として `Area` に対応する `_docs/plan/<Area>/...` 配下へ配置する。
-- **New Area**: 新しい領域のタスクを作成する場合、`Size >= M` などで `Plan` が必要になった時点で、必要に応じて `_docs/plan/<Area>/` を作成する。
+- **Planとの対応**: `Plan` が存在する場合は `_docs/plan/<Area>/<slug>/plan.md` に配置し、`<Area>` はこのフィールドと完全一致させる。
+- **New Area**: 新しい領域のタスクを作成する場合、`Size >= M` などで `Plan` が必要になった時点で、必要に応じて `_docs/plan/<Area>/<slug>/plan.md` を作成する。
 - **Example**:
-  - `Area: Core` かつ `Plan: _docs/plan/Core/auth-feature.md`
+  - `Area: Core` かつ `Plan: _docs/plan/Core/auth-feature/plan.md`
   - `Area: Docs` かつ `Plan: None`
+
+### Canonical Document Paths
+
+- `draft`: `_docs/draft/<Area>/<slug>/notes.md`
+- `survey`: `_docs/survey/<Area>/<slug>/survey.md`
+- `plan`: `_docs/plan/<Area>/<slug>/plan.md`
+- `intent`: `_docs/intent/<Area>/<slug>/decision.md`
+- `guide`: `_docs/guide/<Area>/<slug>/usage.md`
+- `reference`: `_docs/reference/<Area>/<slug>/reference.md`
+- `archives`: `_docs/archives/{draft,plan,survey}/<Area>/<slug>/...`
+
+`<Area>` はタスクの `Area` と一致させる。`<slug>` は機能・変更単位の kebab-case 名にする。
 
 ### Steps vs Plan
 タスクの規模に応じて `Steps` の記述方針を切り替えること。情報の二重管理を避ける。
@@ -92,7 +105,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - `Chore` (Maintenance/Misc)
 
 ### Areas (Examples)
-**※`Area` は論理的な分類ラベルであり、`Plan` がある場合に原則 `_docs/plan/<Area>/...` と対応する。**
+**※`Area` は論理的な分類ラベルであり、`Plan` がある場合に `_docs/plan/<Area>/<slug>/plan.md` の `<Area>` と一致する。**
 - `Core`: 基盤ロジック
 - `UI`: プレゼンテーション層
 - `Docs`: ドキュメント整備自体
@@ -138,7 +151,7 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
   3. [ ] Planの "Security" に記載されたJWT発行ロジックを実装
   4. [ ] E2Eテストを実施し、ログインフローの疎通を確認
 - **Description**: 新規サービスの基盤となる認証機能を実装する。
-- **Plan**: `_docs/plan/Core/auth-feature.md`
+- **Plan**: `_docs/plan/Core/auth-feature/plan.md`
 ````
 
 ### Case B: Small Fix / Maintenance (Size \< M)
@@ -172,23 +185,23 @@ ID生成およびタイトルのプレフィックスには以下のみを使用
 - **Size**: S
 - **Area**: DevOps
 - **Dependencies**: [Core-Feat-25]
-- **Goal**: 新メンバー向けのデプロイ手順書が `_docs/guide/deployment.md` に作成されている。
+- **Goal**: 新メンバー向けのデプロイ手順書が `_docs/guide/DevOps/deployment/usage.md` に作成されている。
 - **Steps**:
-  1. [ ] `_docs/guide/deployment.md` を作成し、ステージング環境へのデプロイ手順を記述
+  1. [ ] `_docs/guide/DevOps/deployment/usage.md` を作成し、ステージング環境へのデプロイ手順を記述
   2. [ ] 必要に応じて関連する参照先やリンクを更新
 - **Description**: オンボーディングコスト削減のため、暗黙知になっているデプロイ手順をドキュメント化する。
 - **Plan**: None
 ```
 
---- 
+---
 
 ## Inbox
-- 
+
+-
 
 ---
 
 ## Backlog
-
 
 - **Title**: [Chore] Review and customize AGENTS.md
 - **ID**: Docs-Chore-1

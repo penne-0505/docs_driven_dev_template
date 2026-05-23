@@ -9,6 +9,7 @@ related_issues: []
 related_prs: []
 ---
 
+<!-- Canonical path: _docs/plan/<Area>/<slug>/plan.md -->
 <!-- 合意済み仕様のみを記載。Scope / Non-Goals / Test Plan を網羅し、破壊的変更時は status や updated_at を必ず更新してください。 -->
 
 ## Overview

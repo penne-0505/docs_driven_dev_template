@@ -1,3 +1,17 @@
+---
+title: Documentation Guide
+status: active
+draft_status: n/a
+created_at: 2025-12-07
+updated_at: 2026-05-23
+references:
+  - "_docs/standards/documentation_guidelines.md"
+  - "_docs/standards/documentation_operations.md"
+  - "_docs/standards/security_for_agents.md"
+related_issues: []
+related_prs: []
+---
+
 # Documentation Guide
 
 **必読:** ドキュメントのアーカイブ運用フローに関する最新ルールは、常に `_docs/standards/documentation_operations.md` を参照して遵守してください。
@@ -14,18 +28,21 @@
 2. **`_docs/standards/documentation_guidelines.md`**
    - ドキュメント体系、各ディレクトリの役割、front-matter の必須項目をまとめた実務ガイドラインです。
    - 執筆時のテンプレートや確認観点を確認する際に参照してください。
-3. **テンプレート集 (`_docs/standards/templates/`)**
+3. **`_docs/standards/security_for_agents.md`**
+   - secret、外部入力、外部 skill / script、破壊的操作の扱いを定義しています。
+4. **テンプレート集 (`_docs/standards/templates/`)**
   - 各ドキュメント種別（draft/plan/intent/guide/reference/survey）向けの作成用テンプレートを配置しています。
   - front-matter の8必須項目を含んだ初期雛形を用意しているので、コピーして日付やステータスを実情に合わせて更新してください。
 
 ## 利用者へのお願い
 - 新しいドキュメントを追加するときは、上記 2 文書を読み、運用前提に矛盾がないかを確認してください。
-- `intent` 作成後にアーカイブを行う場合は、対象ドキュメントと移行先の整合性を確認してください。
+- `intent` は恒久的な設計判断ログです。アーカイブ対象は `draft` / `plan` / `survey` のみです。
+- 一時ドキュメントをアーカイブする場合は、対応する `intent` が存在し、相互参照されていることを確認してください。
 - ガイドラインに改善点を見つけた場合は、`_docs/draft/` で議論を開始し、合意形成後に標準ドキュメントを更新してください。
 
 ## 最終更新の扱い
 - 本ファイルを更新した場合は、`_docs/standards/documentation_operations.md` と `_docs/standards/documentation_guidelines.md` の整合性を確認してください。
-- CI では markdownlint と front-matter/stale チェック（Deno スクリプト）が自動実行されます。front-matter/stale チェックでは `archives` と `_docs/standards/` 配下を除外します。link-check は未導入であり、現時点では必須運用に含めません。
+- CI では markdownlint、front-matter/stale チェック、TODO チェック、ローカルリンクチェック（Deno スクリプト）が自動実行されます。front-matter/stale チェックでは `archives` と `_docs/standards/` 配下を除外します。
 
 ## Front-matter クイックリファレンス
 
@@ -51,7 +68,6 @@
 - `stale_exempt_until`: 延長の猶予期限 (`YYYY-MM-DD`)
 - `stale_exempt_reason`: 延長理由
 - `stale_extensions`: 延長回数（延長のたびに +1）
-
 
 ### よくある更新パターン
 
@@ -83,7 +99,7 @@ updated_at: 2023-11-25
 
 #### 3. draft から plan へ昇格
 
-  - `_docs/plan/` に移動
+  - `_docs/plan/<Area>/<slug>/plan.md` に移動
   - `draft_status` を `n/a` に変更
 
 <!-- end list -->
@@ -108,9 +124,9 @@ updated_at: 2023-12-10
 
 #### 5. plan から intent へ移行
 
-  - `_docs/intent/` に新しいドキュメントを作成
+  - `_docs/intent/<Area>/<slug>/decision.md` に新しいドキュメントを作成
   - `references` に plan へのリンクを追加
-  - intent 作成後、対応する plan 原本を `_docs/archives/plan/` へ移送
+  - intent 作成後、archive checklist を満たす場合のみ、対応する plan 原本を `_docs/archives/plan/<Area>/<slug>/plan.md` へ移送
 
 <!-- end list -->
 
@@ -121,7 +137,7 @@ draft_status: n/a
 created_at: 2023-12-15
 updated_at: 2023-12-15
 references:
-  - ../plan/feature-plan.md
+  - ../../plan/Core/feature-x/plan.md
 related_issues: []
 related_prs: []
 ```
@@ -137,7 +153,7 @@ related_prs: []
 
 ### Status の遷移ルール
 
-```
+```text
 提案段階    実装段階     廃止段階
    ↓         ↓           ↓
 proposed → active → superseded
@@ -157,5 +173,5 @@ proposed → active → superseded
 | バグ修正などの小規模タスクだが Plan は必要か？ | **不要**です (Size \< M)。TODO.md の手順に従ってください。 |
 | draft が 30 日以上更新されていない | 昇格 / 延長 / クローズを判断。延長する場合は `stale_exempt_until` など任意フィールドを記録して猶予を明示 |
 | intent 作成前に plan をアーカイブしてしまった | **ルール違反**。対応する intent を作成してから改めて実行。 |
-| 複数の plan が同じ機能を記述している | 最新の plan をメインに、古い版は `superseded` に設定。archives へ移送 |
+| 複数の plan が同じ機能を記述している | 最新の plan をメインに、古い版は `superseded` に設定。対応 intent を作成・関連付けたうえで archives へ移送 |
 | guide/reference が古い情報を含んでいる | reference は `status: active` の plan/intent のみ反映。古い版との同期ズレは修正 PR で対応 |

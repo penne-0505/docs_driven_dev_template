@@ -46,4 +46,4 @@ For large changes (Size >= M) or when design decisions are needed:
 
 - Use **docs-prep skill** in addition to this skill
 - Follow the full documentation workflow: draft → plan → intent
-- See `.codex/skills/docs-prep/SKILL.md` for details
+- See the **docs-prep skill** for details

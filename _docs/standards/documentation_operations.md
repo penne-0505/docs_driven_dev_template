@@ -4,7 +4,7 @@
 - `_docs/draft/` と `_docs/plan/` を中心に、ドキュメント種別ごとの役割と運用境界を明確化する。
 - 昇格・更新・廃止フローを標準化し、全メンバーが同じ基準で扱えるようにする。
 - Front-matter と Markdown テンプレートを連携させ、ドキュメント品質と可観測性を高める。
-- 一時ドキュメント（`draft`/`plan`/`survey`）から `intent`、そして `_docs/archives/` への移行条件を厳格に定義し、履歴整理と追跡を容易にする。
+- 一時ドキュメント（`draft`/`plan`/`survey`）から `intent` への昇格条件、および `_docs/archives/` への移送条件を厳格に定義し、履歴整理と追跡を容易にする。
 
 ## 適用範囲
 - 対象: `_docs/draft/`, `_docs/plan/`, `_docs/survey/`, およびそれらと連携する `intent/`, `guide/`, `reference/`, `archives/`。
@@ -12,20 +12,24 @@
 - 非対象: アプリケーションコードや API の実装規約（別 standards を参照）。
 
 ## ディレクトリの役割
+
 | パス | 目的 | 主な利用者 | 備考 |
 | --- | --- | --- | --- |
-| `_docs/draft/` | アイデア、検討メモ、仮説、代替案等の一時保管 | 設計者・実装者・調査担当 | `updated_at` 基準で stale 管理。決定事項はここに残さない。 |
-| `_docs/plan/` | 合意済み仕様・実施計画の単一参照点 | 施策オーナー・実装担当 | `plan/<domain>/<slug>/plan.md` を基本。 |
-| `_docs/intent/` | 設計判断・意思決定ログ | 設計判断を参照する開発者 | plan 更新時の根拠を格納。 |
-| `_docs/survey/` | 調査・検証レポート | 調査担当・意思決定者 | plan/intent から根拠として参照。 |
-| `_docs/guide/` / `_docs/reference/` | 実装済み機能の運用ガイド・リファレンス | 全メンバー | plan の結果を反映。議論や検討は含めない。 |
-| `_docs/archives/` | intent 作成済みドキュメントの保管庫 | 後から経緯を参照する開発者 | intent 作成後に移送。front-matter を保持したまま履歴保存。 |
+| `_docs/draft/<Area>/<slug>/notes.md` | アイデア、検討メモ、仮説、代替案等の一時保管 | 設計者・実装者・調査担当 | `updated_at` 基準で stale 管理。決定事項はここに残さない。 |
+| `_docs/survey/<Area>/<slug>/survey.md` | 調査・検証レポート | 調査担当・意思決定者 | plan/intent から根拠として参照。 |
+| `_docs/plan/<Area>/<slug>/plan.md` | 合意済み仕様・実施計画の単一参照点 | 施策オーナー・実装担当 | `Size >= M` の TODO で必須。 |
+| `_docs/intent/<Area>/<slug>/decision.md` | 設計判断・意思決定ログ | 設計判断を参照する開発者 | 恒久記録。archive しない。 |
+| `_docs/guide/<Area>/<slug>/usage.md` / `_docs/reference/<Area>/<slug>/reference.md` | 実装済み機能の運用ガイド・リファレンス | 全メンバー | plan の結果を反映。議論や検討は含めない。 |
+| `_docs/archives/{draft,plan,survey}/<Area>/<slug>/...` | intent 作成済み一時ドキュメントの保管庫 | 後から経緯を参照する開発者 | front-matter を保持したまま履歴保存。 |
+
+`<Area>` は `TODO.md` の `Area` と一致させる。`<slug>` は機能・変更単位の kebab-case 名にする。
 
 ## ライフサイクルと昇格ルール
 
-1. **標準フロー**: `draft/survey → (survey) → plan → intent → (guide/reference) → archives`
+1. **標準フロー**: `draft/survey → plan → intent → (guide/reference)`
    - 大規模な変更（`Size >= M`）や、設計判断が必要な機能追加に適用。
-   
+   - `draft` / `survey` / `plan` は、対応する `intent` が存在し、archive checklist を満たす場合のみ archives へ移送する。
+
 2. **軽量フロー (Fast Track)**: `TODO定義(Steps) → intent (事後) → (guide/reference)`
    - 小規模な修正（`Size < M`）に適用。
    - `TODO.md` 上でタスク定義と手順（Steps）が明確である場合、`draft` および `plan` の作成を省略できる。
@@ -39,7 +43,7 @@
 4. **plan 運用**
    - 合意済み仕様のみ。抽象的な検討や議論は `intent/` へ移す。
    - plan は intent に昇華するための原典として扱う。
-   - intent 作成後、対応する plan 原本は `_docs/archives/plan/` へ移送する。
+   - intent 作成後、archive checklist を満たす場合のみ、対応する plan 原本は `_docs/archives/plan/<Area>/<slug>/plan.md` へ移送する。
    - 破壊的変更や方針転換時は `updated_at` を更新し、必要に応じて `status` を `proposed` に戻す。
    - 非推奨になった計画は `status: superseded` とし、後継 plan を本文内で明記。
 
@@ -52,21 +56,37 @@
 
 ## 一時ドキュメントのアーカイブルール
 - `draft`、`plan`、`survey` は「開発過程専用の一時ドキュメント」であり、対応する `intent` を作成していない状態でのアーカイブを禁止する。
+- `intent` は恒久的な設計判断ログであり、archive 対象にしない。
+- archive 対象は `draft` / `plan` / `survey` のみとする。
 - 一時ドキュメントの移行フロー:
   1. 一時ドキュメントを `intent` テンプレートへ再構成する。
-  2. `intent` 作成後、該当一時ドキュメントのアーカイブ移送を行う。
-  3. アーカイブ移送時は、元ディレクトリから原本を取り除き、`_docs/archives/` へ同じ front-matter を保持したまま移す。
+  2. `intent` を `_docs/intent/<Area>/<slug>/decision.md` に作成し、一時ドキュメントと相互参照する。
+  3. アーカイブ移送時は、元ディレクトリから原本を取り除き、`_docs/archives/{draft,plan,survey}/<Area>/<slug>/...` へ同じ front-matter を保持したまま移す。
 - 違反例:
   - 対応する `intent` を作成しないまま `_docs/archives/` へ移動する。
+  - `intent` を `_docs/archives/` へ移動する。
   - アーカイブ後も元ディレクトリに原本を残す。
 - アーカイブ実施時は、対応する `intent` の存在、移動後ディレクトリのクリーンアップ、相互リンク更新を確認する。
 
+## 破壊的操作と archive 移送
+- `rm` / `git rm` による恒久削除は禁止する。不要に見えるファイルでも、削除はユーザーに提案して実行を待つ。
+- archive checklist を満たす一時ドキュメントの移送に限り、`mv` / `git mv` を許可する。
+- archive 移送は削除ではなく、履歴保持のための移動として扱う。
+- archive 実行前に、対応する `intent` が存在し、対象一時ドキュメントへの参照または相互リンクがあることを確認する。
+
+## TODO.md 完了処理
+- 完了タスクは `TODO.md` から削除する。
+- 完了履歴は PR、commit、CHANGELOG、intent、guide、reference に残す。
+- `TODO.md` に Done / Archived セクションを作らない。
+- follow-up が必要な場合は、新しい ID を採番して Backlog に追加する。
+
 ## アーカイブ実行チェックリスト
-1. 対応する `intent` が作成済みであることを確認する。
-2. アーカイブ対象ドキュメントの front-matter を保持したまま `_docs/archives/` へ移す。
-3. 移行元ディレクトリのクリーンアップを差分で確認し、残骸がないことを確認する。
-4. アーカイブ対象と関連する `intent` を `references` フィールドに追記し、相互リンクを更新する。
-5. 必要に応じて `CHANGELOG.md` や関連 Issue へ作業ログを残す。
+1. 対応する `_docs/intent/<Area>/<slug>/decision.md` が作成済みであることを確認する。
+2. アーカイブ対象ドキュメントと `intent` が `references` または本文リンクで関連付けられていることを確認する。
+3. アーカイブ対象ドキュメントの front-matter を保持したまま `_docs/archives/{draft,plan,survey}/<Area>/<slug>/...` へ移す。
+4. 移行元ディレクトリのクリーンアップを差分で確認し、同じ一時ドキュメントが live path に残っていないことを確認する。
+5. アーカイブ対象と関連する `intent` を `references` フィールドに追記し、相互リンクを更新する。
+6. 必要に応じて `CHANGELOG.md` や関連 Issue へ作業ログを残す。
 
 ## 必須フィールド一覧（全ドキュメント共通）
 全てのドキュメントは以下の8つの必須フィールドを持つ（draft は後述の任意フィールドを追加してもよい）。

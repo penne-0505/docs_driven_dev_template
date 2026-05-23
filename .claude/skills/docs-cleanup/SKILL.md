@@ -26,17 +26,17 @@ Check what documentation exists:
 
 ```
 _docs/
-├── draft/(feature)/          # May exist from pre-implementation
-├── plan/(feature)/           # Should exist for Size >= M
-├── intent/(feature)/         # Should exist for design decisions
-├── survey/(feature)/         # May exist for research-heavy features
-├── guide/(feature)/          # Need to create for implemented features
-└── reference/(feature)/      # Need to create for API docs
+├── draft/<Area>/<slug>/notes.md        # May exist from pre-implementation
+├── survey/<Area>/<slug>/survey.md      # May exist for research-heavy features
+├── plan/<Area>/<slug>/plan.md          # Should exist for Size >= M
+├── intent/<Area>/<slug>/decision.md    # Permanent design decision log
+├── guide/<Area>/<slug>/usage.md        # Need to create for implemented features
+└── reference/<Area>/<slug>/reference.md # Need to create for API docs
 ```
 
 ### 2. Update or Create Guide Documentation
 
-**Location**: `_docs/guide/(feature-name)/`
+**Location**: `_docs/guide/<Area>/<slug>/usage.md`
 
 Create user-facing documentation:
 
@@ -47,7 +47,7 @@ status: active
 draft_status: n/a
 created_at: YYYY-MM-DD
 updated_at: YYYY-MM-DD
-references: ["../../intent/feature-x/decision.md"]
+references: ["../../intent/Core/feature-x/decision.md"]
 related_issues: []
 related_prs: []
 ---
@@ -81,7 +81,7 @@ Common issues and solutions.
 
 ### 3. Update or Create Reference Documentation
 
-**Location**: `_docs/reference/(feature-name)/`
+**Location**: `_docs/reference/<Area>/<slug>/reference.md`
 
 Create API/technical documentation:
 
@@ -92,7 +92,7 @@ status: active
 draft_status: n/a
 created_at: YYYY-MM-DD
 updated_at: YYYY-MM-DD
-references: ["../../guide/feature-x/usage.md"]
+references: ["../../guide/Core/feature-x/usage.md"]
 related_issues: []
 related_prs: []
 ---
@@ -130,24 +130,24 @@ Code examples with explanations.
 
 #### Archive Checklist
 
-- [ ] Intent document is **approved/merged**
+- [ ] Corresponding intent document exists and is linked
 - [ ] Archive target has valid front-matter
 - [ ] Source directory cleanup completed
 - [ ] References updated in intent document
 
 #### Archive Process
 
-1. **Verify intent approval**
-   - Check PR status
-   - Link to approved intent in PR description
+1. **Verify intent exists**
+   - Confirm `_docs/intent/<Area>/<slug>/decision.md` exists
+   - Confirm the intent references the temporary document or archive target
 
 2. **Move to archives**
 
    ```bash
-   # Move draft, plan, survey (if intent is approved)
-   _docs/draft/(feature)/     → _docs/archives/draft-(feature)/
-   _docs/plan/(feature)/      → _docs/archives/plan-(feature)/
-   _docs/survey/(feature)/    → _docs/archives/survey-(feature)/
+   # Move draft, plan, survey only after the archive checklist passes.
+   _docs/draft/<Area>/<slug>/notes.md   → _docs/archives/draft/<Area>/<slug>/notes.md
+   _docs/plan/<Area>/<slug>/plan.md     → _docs/archives/plan/<Area>/<slug>/plan.md
+   _docs/survey/<Area>/<slug>/survey.md → _docs/archives/survey/<Area>/<slug>/survey.md
    ```
 
 3. **Keep front-matter intact**
@@ -155,7 +155,7 @@ Code examples with explanations.
    - Update `status: superseded` if applicable
 
 4. **Clean up source directories**
-   - Remove from original locations
+   - Move from original locations with `mv` or `git mv`
    - No duplicates allowed
 
 5. **Update references**
@@ -163,20 +163,22 @@ Code examples with explanations.
    # In intent document, add:
 
    references: [
-   "../../archives/draft-feature-x/",
-   "../../archives/plan-feature-x/"
+   "../../archives/draft/Core/feature-x/notes.md",
+   "../../archives/plan/Core/feature-x/plan.md"
    ]
    ```
 
 #### Forbidden Actions
 
-- ❌ Archive draft/plan/survey without intent approval
+- ❌ Archive draft/plan/survey without a corresponding intent
 - ❌ Keep originals after archiving
 - ❌ Archive without updating references
+- ❌ Archive intent documents
+- ❌ Use `rm` or `git rm` for permanent deletion
 
 ### 5. Update TODO.md
 
-- Mark documentation tasks as completed
+- Remove completed tasks from TODO.md
 - Add links to created/updated documents
 - Note any follow-up documentation debt
 
@@ -200,14 +202,14 @@ npm run validate-frontmatter
 ### Draft Cleanup
 
 - Review content for value
-- Either: Archive (if intent approved) or Delete (if obsolete)
+- Either: Archive (if corresponding intent exists) or keep/update for future work
 - Update `updated_at` if keeping for future reference
 
 ### Plan Cleanup
 
 - Ensure plan matches final implementation
 - Mark `status: superseded` if outdated
-- Move to archives after intent approval
+- Move to archives after the corresponding intent exists and the archive checklist passes
 
 ### Intent Cleanup
 
@@ -227,17 +229,17 @@ npm run validate-frontmatter
 Implementation Complete
         ↓
    [Create/Update]
-   guide/(feature)/
-   reference/(feature)/
+   guide/<Area>/<slug>/usage.md
+   reference/<Area>/<slug>/reference.md
         ↓
    [Verify Intent]
-   Is intent approved?
+   Does corresponding intent exist?
         ↓
     Yes      No
      ↓        ↓
    [Archive]  [Keep/Update]
    draft/     draft/plan/
-   plan/      until approved
+   plan/      until ready
    survey/
         ↓
    [Finalize]
@@ -249,12 +251,12 @@ Implementation Complete
 
 After implementation:
 
-- [ ] Guide document created/updated in `_docs/guide/(feature)/`
-- [ ] Reference document created/updated in `_docs/reference/(feature)/`
-- [ ] Temporary documents archived (if intent approved)
+- [ ] Guide document created/updated in `_docs/guide/<Area>/<slug>/usage.md`
+- [ ] Reference document created/updated in `_docs/reference/<Area>/<slug>/reference.md`
+- [ ] Temporary documents archived (if corresponding intent exists and checklist passes)
 - [ ] Source directories cleaned up
 - [ ] References cross-linked between documents
-- [ ] TODO.md updated with document links
+- [ ] TODO.md completed entries removed and follow-up tasks added if needed
 - [ ] Validation passed (lint, links, front-matter)
 
 ## Integration with Post-Implementation
@@ -268,4 +270,4 @@ Use both skills together:
 
 - `_docs/standards/documentation_guidelines.md` - Full documentation guidelines
 - `_docs/standards/documentation_operations.md` - Archive rules and lifecycle
-- `.codex/skills/docs-prep/SKILL.md` - Pre-implementation documentation
+- **docs-prep skill** - Pre-implementation documentation

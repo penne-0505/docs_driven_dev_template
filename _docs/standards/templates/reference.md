@@ -9,13 +9,16 @@ related_issues: []
 related_prs: []
 ---
 
+<!-- Canonical path: _docs/reference/<Area>/<slug>/reference.md -->
 <!-- 実装済み API/仕様のみ。パラメータ・戻り値・例外・例を網羅してください。 -->
 
 ## Overview
 - 対象API/モジュールの概要
 
 ## API
-### <Endpoint or Class>
+
+### Endpoint or Class
+
 - **Summary**: 説明
 - **Parameters**: name (type) — 説明
 - **Returns**: 型と意味

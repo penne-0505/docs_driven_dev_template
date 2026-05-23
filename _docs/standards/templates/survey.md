@@ -9,6 +9,7 @@ related_issues: []
 related_prs: []
 ---
 
+<!-- Canonical path: _docs/survey/<Area>/<slug>/survey.md -->
 <!-- 調査・検証結果を整理し、plan/intent の根拠として参照できる形にまとめてください。 -->
 
 ## Background

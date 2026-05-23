@@ -33,7 +33,7 @@ Based on the implementation size and complexity:
 
 ### 2. Create Draft Documentation
 
-**Location**: `_docs/draft/(feature-name)/`
+**Location**: `_docs/draft/<Area>/<slug>/notes.md`
 
 Create initial notes and hypotheses:
 
@@ -73,7 +73,7 @@ related_prs: []
 
 ### 3. Elevate to Plan (if needed)
 
-**Location**: `_docs/plan/(feature-name)/plan.md`
+**Location**: `_docs/plan/<Area>/<slug>/plan.md`
 
 When scope is clear, create formal plan:
 
@@ -84,7 +84,7 @@ status: proposed
 draft_status: n/a
 created_at: YYYY-MM-DD
 updated_at: YYYY-MM-DD
-references: ["../draft/feature-x/"]
+references: ["../../draft/Core/feature-x/notes.md"]
 related_issues: []
 related_prs: []
 ---
@@ -128,7 +128,7 @@ Deployment procedures and rollback strategy.
 
 ### 4. Create Intent (ADR-style)
 
-**Location**: `_docs/intent/(feature-name)/decision.md`
+**Location**: `_docs/intent/<Area>/<slug>/decision.md`
 
 Record design decisions and rationale:
 
@@ -139,7 +139,7 @@ status: active
 draft_status: n/a
 created_at: YYYY-MM-DD
 updated_at: YYYY-MM-DD
-references: ["../../plan/feature-x/plan.md"]
+references: ["../../plan/Core/feature-x/plan.md"]
 related_issues: []
 related_prs: []
 ---
@@ -171,10 +171,10 @@ Other options and why they were rejected.
 
 ### Naming Convention
 
-Directory name `(対象)` must match TODO.md **Area** field:
+`<Area>` must match TODO.md **Area** field:
 
-- If renaming directory, update TODO.md Area simultaneously
-- Use kebab-case for multi-word names
+- If renaming the Area segment, update TODO.md Area simultaneously
+- Use kebab-case for `<slug>`
 
 ### Status Transitions
 
@@ -182,15 +182,16 @@ Directory name `(対象)` must match TODO.md **Area** field:
 | ------- | --------- | ------------------------------------ |
 | draft/  | plan/     | Scope and requirements are clear     |
 | plan/   | intent/   | Design decisions are finalized       |
-| intent/ | archives/ | Approved and implementation complete |
 | draft/  | survey/   | Research findings need formalization |
 | survey/ | plan/     | Research complete, ready to plan     |
+
+`intent/` is a permanent decision log. Do not archive intent documents.
 
 ### Stale Management
 
 - Drafts: 30-day TTL from `updated_at`
 - Extensions: Add `stale_exempt_until`, `stale_exempt_reason`, `stale_extensions`
-- Never archive draft/plan/survey without intent approval
+- Never archive draft/plan/survey without a corresponding intent
 
 ## Integration with Implementation
 
@@ -202,9 +203,9 @@ Directory name `(対象)` must match TODO.md **Area** field:
 
 Before starting implementation:
 
-- [ ] Draft notes in `_docs/draft/(feature)/` (exploring phase)
-- [ ] Plan document in `_docs/plan/(feature)/` (if Size >= M)
-- [ ] Intent document in `_docs/intent/(feature)/` (if design decisions needed)
+- [ ] Draft notes in `_docs/draft/<Area>/<slug>/notes.md` (exploring phase)
+- [ ] Plan document in `_docs/plan/<Area>/<slug>/plan.md` (if Size >= M)
+- [ ] Intent document in `_docs/intent/<Area>/<slug>/decision.md` (if design decisions needed)
 - [ ] All documents linked in TODO.md references
 - [ ] Front-matter complete with dates and relationships
 

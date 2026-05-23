@@ -4,5 +4,6 @@
 - 日付確認には`date`コマンドを使用する。
 - tool や shell command を優先して使用する。
 - **徹底的に現状実装・ドキュメントを参照、分析してから実装を行う。**
-- **`git rm`や`rm`などのファイル削除は禁止**（ユーザーに提案し、実行は待つ）
+- **`git rm`や`rm`などの恒久削除は禁止**（ユーザーに提案し、実行は待つ）。ただし、archive checklist を満たす一時ドキュメントの移送に限り `mv` / `git mv` は許可。
 - [documentation guidelines](_docs/standards/documentation_guidelines.md) と [documentation operations](_docs/standards/documentation_operations.md) を遵守して、積極的にドキュメントを更新する。skillsを積極活用してドキュメント更新と実装準備を行う。
+- 安全性・権限・secret・外部入力の扱いは [security for agents](_docs/standards/security_for_agents.md) に従う。

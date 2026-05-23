@@ -9,6 +9,7 @@ related_issues: []
 related_prs: []
 ---
 
+<!-- Canonical path: _docs/guide/<Area>/<slug>/usage.md -->
 <!-- 実装済み機能のみを対象。使用手順・ベストプラクティス・トラブルシュートを中心に記述してください。 -->
 
 ## Overview

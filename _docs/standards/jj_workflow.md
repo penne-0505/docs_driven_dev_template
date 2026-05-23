@@ -28,3 +28,7 @@
     4. **"コンフリクトが発生している"旨のエラーが出た場合**
         - あなたがLLMである場合は、ユーザーに現在の状況を説明して、判断を仰いでください。この場合には、いかなる変更も禁止されます。
         - 人間のユーザーである場合は、`jj edit`でコンフリクトを解消し、再度`jj git push --bookmark dev`を実行してください。
+
+## CI との整合
+
+Docs CI は `main` と `dev` への push、および `main` 向け pull request で実行されます。jj workflow では `dev` bookmark の push を基本とするため、通常の `jj git push --bookmark dev` 後にも documentation validators が走ります。
