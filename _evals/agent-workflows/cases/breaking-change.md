@@ -18,8 +18,30 @@ Plan に migration、rollback、compatibility を追記し、実装後に intent
 
 - `_docs/plan/<Area>/<slug>/plan.md`
 - `_docs/intent/<Area>/<slug>/decision.md`
+- `_docs/qa/<Area>/<slug>/test-plan.md`
+- `_docs/qa/<Area>/<slug>/verification.md`
 - `_docs/reference/<Area>/<slug>/reference.md`
 - 必要に応じて `_docs/guide/<Area>/<slug>/usage.md`
+
+## Expected QA Behavior
+
+- Risk is High unless proven otherwise.
+- QA test-plan includes rollback / recovery / data safety / compatibility checks.
+
+## Expected Intent-derived Invariants
+
+- INV-001: migration or compatibility decisions in intent are verified.
+- INV-002: reference docs do not describe unsupported legacy behavior as active.
+
+## Expected Test-plan Behavior
+
+- Test Matrix maps AC / INV to automated tests, validators, manual QA, or diff review.
+- Deferred compatibility checks include a reason and follow-up.
+
+## Expected Verification Behavior
+
+- Verification is required before completion.
+- Verdict is not PASS unless migration, rollback, and compatibility evidence are present.
 
 ## Expected TODO.md Behavior
 
@@ -30,6 +52,7 @@ Plan に migration、rollback、compatibility を追記し、実装後に intent
 
 - `validate-todo` が Size と Plan 要件を満たす。
 - `validate-doc-links` が更新 references のリンク切れを検出しない。
+- `validate-qa` が QA front-matter、High-risk Checklist、verification verdict を検証する。
 
 ## Failure Modes to Watch
 

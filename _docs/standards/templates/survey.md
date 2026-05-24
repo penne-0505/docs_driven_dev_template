@@ -1,6 +1,6 @@
 ---
 title: Survey Title
-status: proposed  # allowed: proposed | active | superseded
+status: proposed  # allowed: proposed | active | superseded | obsolete
 draft_status: n/a  # allowed: idea | exploring | paused | n/a
 created_at: YYYY-MM-DD
 updated_at: YYYY-MM-DD

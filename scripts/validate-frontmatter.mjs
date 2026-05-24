@@ -3,6 +3,15 @@
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 const STALE_DAYS = 30;
+const RISKS = ["Low", "Medium", "High", "Critical"];
+const QA_STATUS_VALUES = [
+  "planned",
+  "in-progress",
+  "verified",
+  "partial",
+  "failed",
+  "blocked",
+];
 const REQUIRED_KEYS = [
   "title",
   "status",
@@ -13,7 +22,7 @@ const REQUIRED_KEYS = [
   "related_issues",
   "related_prs",
 ];
-const STATUS_VALUES = ["proposed", "active", "superseded"];
+const STATUS_VALUES = ["proposed", "active", "superseded", "obsolete"];
 const DRAFT_STATUS_VALUES = ["idea", "exploring", "paused", "n/a"];
 
 const isStringArray = (val) =>
@@ -42,6 +51,7 @@ const normalizePath = (path) => path.replaceAll("\\", "/");
 const isInArchives = (path) =>
   normalizePath(path).split("/").includes("archives");
 const isDraftPath = (path) => normalizePath(path).split("/").includes("draft");
+const isQaPath = (path) => normalizePath(path).split("/").includes("qa");
 const isInStandards = (path) =>
   normalizePath(path).split("/").includes("standards");
 
@@ -214,6 +224,22 @@ const run = async () => {
         "related_issues must be an array of integers (can be empty)",
       );
     }
+
+    if (isQaPath(file)) {
+      if (!("qa_status" in data)) {
+        fileErrors.push("missing required QA field: qa_status");
+      } else if (!QA_STATUS_VALUES.includes(data.qa_status)) {
+        fileErrors.push(
+          `qa_status must be one of ${QA_STATUS_VALUES.join(", ")}`,
+        );
+      }
+
+      if (!("risk" in data)) {
+        fileErrors.push("missing required QA field: risk");
+      } else if (!RISKS.includes(data.risk)) {
+        fileErrors.push(`risk must be one of ${RISKS.join(", ")}`);
+      }
+    }
     if (!isIntegerArray(data.related_prs)) {
       fileErrors.push(
         "related_prs must be an array of integers (can be empty)",
@@ -282,6 +308,7 @@ const run = async () => {
     for (const key of Object.keys(data)) {
       if (
         !REQUIRED_KEYS.includes(key) &&
+        !(isQaPath(file) && ["qa_status", "risk"].includes(key)) &&
         !key.startsWith("stale_exempt") &&
         key !== "stale_extensions"
       ) {

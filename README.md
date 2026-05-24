@@ -8,6 +8,8 @@
 
 開発サイクルはドキュメントと [TODO.md](TODO.md) によって構成されています。
 
+このテンプレートは `intent` を品質保証の一次資料として扱います。中規模以上、またはリスクのある変更では `_docs/qa/` に QA test-plan と verification を残し、テストを intent-derived invariant と acceptance criteria に紐づけます。`_docs/qa/` はテストコードの置き場ではなく、計画・対応表・検証証跡の置き場です。
+
 人がサイクルを回すことも出来ますが、基本的には**Claude Codeなどのコーディングエージェント**が、この規則に従って自律的な開発を行うために設計されました。
 
 **詳細については [ガイドライン](_docs/documentation_guide.md) を参照してください。**
@@ -21,6 +23,10 @@
 3. 開発を開始します。
 
 配布用 ZIP を作る場合は、`.git` / `.jj` などの VCS メタデータを含めないために、GitHub 標準アーカイブまたは `scripts/create-template-archive.sh` を使用してください。
+
+ローカルでドキュメント検証をまとめて実行する場合は、`scripts/check-docs.sh` を使います。
+
+root 直下の Markdown は agent 向けの active guidance として扱われます。一回限りの実装プロンプトを履歴として残す場合は `_evals/prompts/` などへ移し、非運用文書であることを明記してください。
 
 ### カスタマイズ
 
@@ -50,6 +56,8 @@ This repository is a template for Documentation Driven Development that I common
 
 The development cycle is structured around documentation and [TODO.md](TODO.md).
 
+This template treats `intent` documents as primary QA inputs. Medium-sized or risky changes keep a QA test plan and verification record under `_docs/qa/`, and tests should map back to intent-derived invariants and acceptance criteria. `_docs/qa/` is for plans, traceability, and evidence; test code belongs in the codebase's normal test locations.
+
 While humans can run the cycle, it is primarily designed **for coding agents like Claude Code** to autonomously develop according to these rules.
 
 **For more details, please refer to the [Guidelines](_docs/documentation_guide.md).**
@@ -63,6 +71,10 @@ If this is your first time using the template, start with the [Quickstart](QUICK
 3. Start development.
 
 When creating a distribution ZIP, use GitHub's standard archive or `scripts/create-template-archive.sh` so VCS metadata such as `.git` / `.jj` is not included.
+
+Use `scripts/check-docs.sh` to run the local documentation validators together.
+
+Root-level Markdown is treated as active guidance for agents. If you keep a one-off implementation prompt for history, move it under `_evals/prompts/` or another historical location and mark it as non-operational.
 
 ### Customization
 

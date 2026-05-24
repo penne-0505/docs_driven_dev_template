@@ -8,8 +8,12 @@
 - initial state
 - agent task
 - expected documents touched
+- expected QA behavior
+- expected intent-derived invariants
+- expected test-plan behavior
+- expected verification behavior
 - expected TODO.md behavior
-- expected validation outcome
+- expected test / validator behavior
 - failure modes to watch
 
 将来は、ケースごとの期待差分を固定し、promptfoo や独自 runner に接続して自動比較できる形へ拡張できます。現時点では、人間が agent の出力と差分をレビューするための基準として使います。
@@ -21,6 +25,15 @@
 - [breaking-change](cases/breaking-change.md)
 - [stale-draft-cleanup](cases/stale-draft-cleanup.md)
 - [archive-flow](cases/archive-flow.md)
+- [qa-prep-from-intent](cases/qa-prep-from-intent.md)
+- [bug-regression-test](cases/bug-regression-test.md)
+- [refactor-behavior-preservation](cases/refactor-behavior-preservation.md)
+- [high-risk-change-verification](cases/high-risk-change-verification.md)
+- [agent-workflow-misbehavior-check](cases/agent-workflow-misbehavior-check.md)
+- [blocked-verification](cases/blocked-verification.md)
+- [malformed-todo-heading](cases/malformed-todo-heading.md)
+- [qa-status-verdict-mismatch](cases/qa-status-verdict-mismatch.md)
+- [historical-prompt-not-operational](cases/historical-prompt-not-operational.md)
 
 ## Expected Invariants
 

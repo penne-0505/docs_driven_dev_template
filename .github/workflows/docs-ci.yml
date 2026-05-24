@@ -43,3 +43,9 @@ jobs:
 
       - name: Validate doc links
         run: deno run --allow-read scripts/validate-doc-links.mjs
+
+      - name: Validate QA docs
+        run: deno run --allow-read scripts/validate-qa.mjs
+
+      - name: Test validators against fixtures
+        run: deno run --allow-read --allow-run scripts/test-validators.mjs

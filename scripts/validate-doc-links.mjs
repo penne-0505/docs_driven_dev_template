@@ -3,6 +3,7 @@
 const DOC_ROOTS = ["_docs", "_evals"];
 const ROOT_FILES = ["README.md", "AGENTS.md", "TODO.md", "QUICKSTART.md"];
 const ARCHIVE_TYPES = ["draft", "plan", "survey"];
+const FORBIDDEN_ARCHIVE_TYPES = ["intent", "qa", "guide", "reference"];
 const ROOT_RELATIVE_PREFIXES = [
   "_docs/",
   "_evals/",
@@ -63,10 +64,22 @@ const exists = async (path) => {
   }
 };
 
+const isDirectory = async (path) => {
+  try {
+    const stat = await Deno.stat(path);
+    return stat.isDirectory;
+  } catch (err) {
+    if (err instanceof Deno.errors.NotFound) return false;
+    throw err;
+  }
+};
+
 const isExternal = (target) =>
   /^[a-z][a-z0-9+.-]*:/i.test(target) ||
   target.startsWith("//") ||
   target.startsWith("#");
+
+const isTemplatePlaceholder = (target) => /<[^>]+>/.test(target);
 
 const stripCodeBlocks = (src) => {
   const output = [];
@@ -211,6 +224,7 @@ const resolveTarget = (fromFile, target) => {
 };
 
 const validateLocalTarget = async (fromFile, target, errors) => {
+  if (isTemplatePlaceholder(target)) return;
   const resolved = resolveTarget(fromFile, target);
   if (!resolved) return;
   if (!await exists(resolved)) {
@@ -260,6 +274,17 @@ const collectIntentReferences = async () => {
 };
 
 const validateArchiveInvariants = async (errors) => {
+  for (const type of FORBIDDEN_ARCHIVE_TYPES) {
+    const dir = `_docs/archives/${type}`;
+    if (await isDirectory(dir)) {
+      errors.push({
+        file: dir,
+        message:
+          "archive directories are only allowed for draft, plan, and survey",
+      });
+    }
+  }
+
   const intentRefs = await collectIntentReferences();
   for await (
     const file of walkFiles("_docs/archives", (path) => path.endsWith(".md"))
@@ -301,6 +326,35 @@ const validateArchiveInvariants = async (errors) => {
         message:
           `live ${type} document still exists for archived ${area}/${slug}`,
       });
+    }
+  }
+};
+
+const validateQaInvariants = async (errors) => {
+  for await (
+    const file of walkFiles("_docs/qa", (path) => path.endsWith(".md"))
+  ) {
+    const match = file.match(
+      /^_docs\/qa\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(test-plan|verification)\.md$/,
+    );
+    if (!match) {
+      errors.push({
+        file,
+        message:
+          "QA path must match _docs/qa/<Area>/<slug>/test-plan.md or verification.md",
+      });
+      continue;
+    }
+
+    const [, area, slug, kind] = match;
+    if (kind === "verification") {
+      const testPlan = `_docs/qa/${area}/${slug}/test-plan.md`;
+      if (!await exists(testPlan)) {
+        errors.push({
+          file,
+          message: `verification requires matching test plan: ${testPlan}`,
+        });
+      }
     }
   }
 };
@@ -384,6 +438,7 @@ const run = async () => {
   }
 
   await validateArchiveInvariants(errors);
+  await validateQaInvariants(errors);
   await validateGuideReferenceWarnings(warnings);
 
   report("WARN", warnings, console.warn);

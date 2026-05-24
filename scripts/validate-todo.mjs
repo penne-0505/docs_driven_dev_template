@@ -1,9 +1,10 @@
 // Deno版 TODO.md validator: npm / remote import 依存なし
 
-const TODO_FILE = "TODO.md";
+const TODO_FILE = Deno.args[0] ?? "TODO.md";
 const PRIORITIES = ["P0", "P1", "P2", "P3"];
 const SIZES = ["XS", "S", "M", "L", "XL"];
 const LARGE_SIZES = ["M", "L", "XL"];
+const RISKS = ["Low", "Medium", "High", "Critical"];
 const CATEGORIES = [
   "Feat",
   "Enhance",
@@ -19,18 +20,38 @@ const REQUIRED_FIELDS = [
   "ID",
   "Priority",
   "Size",
+  "Risk",
   "Area",
   "Dependencies",
   "Goal",
+  "Acceptance Criteria",
   "Steps",
   "Description",
   "Plan",
+  "Intent",
+  "QA",
+  "Verification",
 ];
 const SECTION_NAMES = ["Inbox", "Backlog", "Ready", "In Progress"];
-const ID_RE =
-  /^([A-Za-z][A-Za-z0-9-]*)-(Feat|Enhance|Bug|Refactor|Perf|Doc|Test|Chore)-([1-9]\d*)$/;
-const PLAN_RE =
-  /^_docs\/plan\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/plan\.md$/;
+const CATEGORY_PATTERN = CATEGORIES.join("|");
+const ID_RE = new RegExp(
+  `^([A-Za-z][A-Za-z0-9-]*)-(${CATEGORY_PATTERN})-([1-9]\\d*)$`,
+);
+const TASK_HEADING_RE = new RegExp(
+  `^###\\s+([A-Za-z][A-Za-z0-9-]*-(${CATEGORY_PATTERN})-[1-9]\\d*):\\s+\\[(${CATEGORY_PATTERN})\\]\\s+(.+?)\\s*$`,
+);
+const FIELD_RE =
+  /^-\s+(?:\*\*([A-Za-z][A-Za-z ]*)\*\*|([A-Za-z][A-Za-z ]*)):\s*(.*)$/;
+const PATH_PATTERNS = {
+  Plan:
+    /^_docs\/plan\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/plan\.md$/,
+  Intent:
+    /^_docs\/intent\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/decision\.md$/,
+  QA:
+    /^_docs\/qa\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/test-plan\.md$/,
+  Verification:
+    /^_docs\/qa\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/verification\.md$/,
+};
 
 const stripCodeBlocks = (src) => {
   const output = [];
@@ -54,12 +75,8 @@ const normalizeInlineCode = (value) => {
   return trimmed;
 };
 
-const sectionForLine = (line, current) => {
-  const match = line.match(/^##\s+(.+?)\s*$/);
-  if (!match) return current;
-  const normalized = match[1].replace(/\s*\(.*\)\s*$/, "").trim();
-  return normalized;
-};
+const normalizeSectionName = (value) =>
+  value.replace(/\s*\(.*\)\s*$/, "").trim();
 
 const parseTasks = (src) => {
   const lines = src.split(/\r?\n/);
@@ -74,26 +91,52 @@ const parseTasks = (src) => {
     currentField = null;
   };
 
-  for (const line of lines) {
-    currentSection = sectionForLine(line, currentSection);
-    const field = line.match(/^- \*\*([A-Za-z]+)\*\*:\s*(.*)$/);
-    if (field?.[1] === "Title") {
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const lineNo = index + 1;
+    const section = line.match(/^##\s+(.+?)\s*$/);
+    if (section) {
       flush();
+      currentSection = normalizeSectionName(section[1]);
+      continue;
+    }
+
+    if (!SECTION_NAMES.includes(currentSection ?? "")) continue;
+
+    const heading = line.match(/^###\s+(.+?)\s*$/);
+    if (heading) {
+      flush();
+      const headingMatch = line.match(TASK_HEADING_RE);
       current = {
-        section: currentSection ?? "Unknown",
-        fields: { Title: field[2].trim() },
+        section: currentSection,
+        lineNo,
+        heading: heading[1].trim(),
+        fields: {},
       };
-      currentField = "Title";
+      if (headingMatch) {
+        current.headingId = headingMatch[1];
+        current.headingIdCategory = headingMatch[2];
+        current.headingCategory = headingMatch[3];
+        current.headingTitle = headingMatch[4].trim();
+      } else {
+        current.headingError =
+          "task heading must match ### <ID>: [<Category>] <Title>";
+      }
       continue;
     }
+
     if (!current) continue;
+    const field = line.match(FIELD_RE);
     if (field) {
-      current.fields[field[1]] = field[2].trim();
-      currentField = field[1];
+      const fieldName = (field[1] ?? field[2]).trim();
+      current.fields[fieldName] = field[3].trim();
+      currentField = fieldName;
       continue;
     }
-    if (currentField === "Steps" && /^\s+/.test(line)) {
-      current.fields.Steps = `${current.fields.Steps ?? ""}\n${line}`.trim();
+    if (currentField && (/^\s+/.test(line) || line.trim() === "")) {
+      current.fields[currentField] = `${
+        current.fields[currentField] ?? ""
+      }\n${line}`.trimEnd();
     }
   }
   flush();
@@ -127,6 +170,78 @@ const report = (prefix, messages, logger) => {
   for (const message of messages) logger(`  - ${message}`);
 };
 
+const riskAtLeast = (risk, floor) =>
+  RISKS.indexOf(risk) >= RISKS.indexOf(floor);
+
+const isNone = (value) => normalizeInlineCode(value ?? "") === "None";
+
+const validateDocPath = async ({
+  task,
+  label,
+  field,
+  value,
+  mustExist,
+  errors,
+}) => {
+  const normalized = normalizeInlineCode(value ?? "");
+  if (normalized === "" || normalized === "None") return;
+
+  const match = normalized.match(PATH_PATTERNS[field]);
+  if (!match) {
+    add(errors, `${label}: ${field} must match canonical ${field} path`);
+    return;
+  }
+
+  const [, docArea] = match;
+  if (task.fields.Area && docArea !== task.fields.Area) {
+    add(errors, `${label}: ${field} Area segment must match Area field`);
+  }
+
+  if (mustExist && !await fileExists(normalized)) {
+    add(errors, `${label}: ${field} file does not exist: ${normalized}`);
+  }
+};
+
+const acceptanceCriteriaIds = (value) =>
+  [...(value ?? "").matchAll(/\bAC-\d{3}\b/g)].map((match) => match[0]);
+
+const titleParts = (title) => {
+  const match = title.match(/^\[([A-Za-z]+)\]\s+(.+)$/);
+  if (!match) return null;
+  return { category: match[1], title: match[2].trim() };
+};
+
+const taskLabel = (task) =>
+  task.headingId ?? task.fields.ID ?? task.fields.Title ??
+    `line ${task.lineNo}: ${task.heading}`;
+
+const validateHeadingConsistency = (task, label, errors) => {
+  if (task.headingError) {
+    add(errors, `${label}: ${task.headingError}`);
+    return;
+  }
+
+  const id = task.fields.ID ?? "";
+  if (id && id !== task.headingId) {
+    add(errors, `${label}: heading ID must match ID field`);
+  }
+
+  const title = task.fields.Title ?? "";
+  const parsedTitle = titleParts(title);
+  if (parsedTitle) {
+    if (parsedTitle.category !== task.headingCategory) {
+      add(errors, `${label}: heading Category must match Title field category`);
+    }
+    if (parsedTitle.title !== task.headingTitle) {
+      add(errors, `${label}: heading Title must match Title field text`);
+    }
+  }
+
+  if (task.headingIdCategory !== task.headingCategory) {
+    add(errors, `${label}: ID category must match heading Category`);
+  }
+};
+
 const run = async () => {
   const src = await Deno.readTextFile(TODO_FILE);
   const stripped = stripCodeBlocks(src);
@@ -156,7 +271,9 @@ const run = async () => {
   let maxIdNo = 0;
 
   for (const task of tasks) {
-    const label = task.fields.ID ?? task.fields.Title ?? "(unknown task)";
+    const label = taskLabel(task);
+    validateHeadingConsistency(task, label, errors);
+
     for (const field of REQUIRED_FIELDS) {
       if (!(field in task.fields) || task.fields[field].trim() === "") {
         add(errors, `${label}: missing required field: ${field}`);
@@ -164,10 +281,10 @@ const run = async () => {
     }
 
     const title = task.fields.Title ?? "";
-    const titleMatch = title.match(/^\[([A-Za-z]+)\]\s+.+$/);
-    if (!titleMatch) {
+    const parsedTitle = titleParts(title);
+    if (!parsedTitle) {
       add(errors, `${label}: Title must match "[Category] Title"`);
-    } else if (!CATEGORIES.includes(titleMatch[1])) {
+    } else if (!CATEGORIES.includes(parsedTitle.category)) {
       add(
         errors,
         `${label}: Title category must be one of ${CATEGORIES.join(", ")}`,
@@ -190,8 +307,11 @@ const run = async () => {
       if (task.fields.Area && task.fields.Area !== idArea) {
         add(errors, `${label}: ID Area must match Area field`);
       }
-      if (titleMatch && titleMatch[1] !== idCategory) {
+      if (parsedTitle && parsedTitle.category !== idCategory) {
         add(errors, `${label}: Title category must match ID category`);
+      }
+      if (task.headingCategory && idCategory !== task.headingCategory) {
+        add(errors, `${label}: ID category must match heading Category`);
       }
     }
 
@@ -203,6 +323,11 @@ const run = async () => {
     const size = task.fields.Size;
     if (size && !SIZES.includes(size)) {
       add(errors, `${label}: Size must be one of ${SIZES.join(", ")}`);
+    }
+
+    const risk = task.fields.Risk;
+    if (risk && !RISKS.includes(risk)) {
+      add(errors, `${label}: Risk must be one of ${RISKS.join(", ")}`);
     }
 
     const deps = parseDependencies(task.fields.Dependencies ?? "");
@@ -223,25 +348,87 @@ const run = async () => {
       }
     }
 
-    const plan = normalizeInlineCode(task.fields.Plan ?? "");
-    if (size && LARGE_SIZES.includes(size) && plan === "None") {
-      add(errors, `${label}: Size ${size} requires a Plan path`);
+    const category = idMatch?.[2] ?? parsedTitle?.category ?? "";
+    const acIds = acceptanceCriteriaIds(task.fields["Acceptance Criteria"]);
+    if (acIds.length === 0) {
+      add(
+        errors,
+        `${label}: Acceptance Criteria must include AC-001 style IDs`,
+      );
     }
-    if (plan !== "" && plan !== "None") {
-      const planMatch = plan.match(PLAN_RE);
-      if (!planMatch) {
+    for (const acId of acIds) {
+      if (!/^AC-\d{3}$/.test(acId)) {
+        add(errors, `${label}: invalid acceptance criterion ID: ${acId}`);
+      }
+    }
+    if (
+      size && risk &&
+      (LARGE_SIZES.includes(size) || riskAtLeast(risk, "Medium")) &&
+      acIds.length < 2
+    ) {
+      add(
+        warnings,
+        `${label}: Size >= M or Risk >= Medium should define at least two acceptance criteria`,
+      );
+    }
+    if (
+      category === "Bug" &&
+      !/regression|prevent|再発|回帰|no-test/i.test(
+        task.fields["Acceptance Criteria"] ?? "",
+      )
+    ) {
+      add(
+        warnings,
+        `${label}: Bug tasks should include regression prevention in Acceptance Criteria`,
+      );
+    }
+
+    const mustExist = ["Ready", "In Progress"].includes(task.section);
+    for (const field of ["Plan", "Intent", "QA", "Verification"]) {
+      await validateDocPath({
+        task,
+        label,
+        field,
+        value: task.fields[field],
+        mustExist,
+        errors,
+      });
+    }
+
+    if (size && LARGE_SIZES.includes(size)) {
+      if (isNone(task.fields.Plan)) {
+        add(errors, `${label}: Size ${size} requires Plan`);
+      }
+      if (isNone(task.fields.Intent)) {
+        add(errors, `${label}: Size ${size} requires Intent`);
+      }
+      if (isNone(task.fields.QA)) {
+        add(errors, `${label}: Size ${size} requires QA`);
+      }
+    }
+    if (risk && riskAtLeast(risk, "Medium")) {
+      if (isNone(task.fields.Intent)) {
+        add(errors, `${label}: Risk ${risk} requires Intent`);
+      }
+      if (isNone(task.fields.QA)) {
+        add(errors, `${label}: Risk ${risk} requires QA`);
+      }
+    }
+    if (risk && riskAtLeast(risk, "High")) {
+      if (isNone(task.fields.Plan)) {
+        add(errors, `${label}: Risk ${risk} requires Plan`);
+      }
+      if (isNone(task.fields.Intent)) {
+        add(errors, `${label}: Risk ${risk} requires Intent`);
+      }
+      if (isNone(task.fields.QA)) {
+        add(errors, `${label}: Risk ${risk} requires QA`);
+      }
+      if (task.section === "In Progress" && isNone(task.fields.Verification)) {
         add(
-          errors,
-          `${label}: Plan must match _docs/plan/<Area>/<slug>/plan.md`,
+          warnings,
+          `${label}: In Progress High/Critical risk task should already have Verification`,
         );
-      } else {
-        const [, planArea] = planMatch;
-        if (task.fields.Area && planArea !== task.fields.Area) {
-          add(errors, `${label}: Plan Area segment must match Area field`);
-        }
-        if (!await fileExists(plan)) {
-          add(errors, `${label}: Plan file does not exist: ${plan}`);
-        }
       }
     }
   }

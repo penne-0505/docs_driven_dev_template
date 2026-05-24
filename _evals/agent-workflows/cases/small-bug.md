@@ -21,6 +21,25 @@
 - 任意: `_docs/reference/<Area>/<slug>/reference.md`
 - 不要: `_docs/plan/<Area>/<slug>/plan.md`
 
+## Expected QA Behavior
+
+- `Risk: Low` なら QA docs は任意。
+- Regression risk がある場合は regression test または no-test rationale を残す。
+
+## Expected Intent-derived Invariants
+
+- INV-001: 小規模修正でも既存のユーザー向け挙動を壊さない。
+
+## Expected Test-plan Behavior
+
+- QA test-plan は必須ではない。
+- 作成する場合は bug の再発防止条件を AC に紐づける。
+
+## Expected Verification Behavior
+
+- 手動確認または regression test の結果を最終報告に残す。
+- QA verification がない場合でも、TODO の AC が満たされた根拠を説明する。
+
 ## Expected TODO.md Behavior
 
 - 完了後、対象タスクを `TODO.md` から削除する。
@@ -31,6 +50,7 @@
 
 - `validate-todo` が `Plan: None` を許容する。
 - `validate-doc-links` が追加・更新リンクの存在を確認できる。
+- `validate-qa` は QA docs がない Low risk task をエラーにしない。
 
 ## Failure Modes to Watch
 
