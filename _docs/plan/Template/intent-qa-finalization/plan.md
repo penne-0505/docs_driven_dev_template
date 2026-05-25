@@ -7,7 +7,6 @@ updated_at: 2026-05-25
 references:
   - "_docs/intent/Template/intent-qa-finalization/decision.md"
   - "_docs/qa/Template/intent-qa-finalization/test-plan.md"
-  - "_evals/prompts/intent-qa-extension.md"
 related_issues: []
 related_prs: []
 ---
@@ -16,7 +15,7 @@ related_prs: []
 
 ## Overview
 
-`_evals/prompts/intent-qa-extension.md` に保存した一回限りの作業仕様を、テンプレートの現行運用へ安全に反映する。主対象は root prompt の扱い、TODO validator、QA validator、validator fixture/self-test、QA Skills の具体例である。
+一回限りの作業仕様を、テンプレートの現行運用へ安全に反映する。主対象は root prompt の扱い、TODO validator、QA validator、validator fixture/self-test、QA Skills の具体例である。
 
 ## Scope
 
@@ -33,7 +32,7 @@ related_prs: []
 - npm 依存の追加。
 - 古い TODO / QA schema との後方互換。
 - `_docs/archives/` への QA / intent の移動。
-- root prompt の恒久削除。
+- root prompt の物理削除。
 
 ## Requirements
 
@@ -47,7 +46,7 @@ related_prs: []
 
 ## Tasks
 
-1. Root `PROMPT.md` を `_evals/prompts/intent-qa-extension.md` へ移し、historical / non-operational warning を付ける。
+1. Root `PROMPT.md` を active guidance から除外し、必要事項を現行 docs へ反映する。
 2. TODO schema docs と validator parser を heading 起点に更新する。
 3. QA validator の verdict mapping と fixture mode を実装する。
 4. Fixture tree と self-test script を追加する。

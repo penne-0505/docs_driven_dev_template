@@ -7,7 +7,6 @@ updated_at: 2026-05-25
 references:
   - "_docs/plan/Template/intent-qa-finalization/plan.md"
   - "_docs/qa/Template/intent-qa-finalization/test-plan.md"
-  - "_evals/prompts/intent-qa-extension.md"
 related_issues: []
 related_prs: []
 ---
@@ -20,7 +19,7 @@ related_prs: []
 
 ## Decision
 
-- 一回限りの implementation prompt は root に置かず、履歴資料として `_evals/prompts/` に置き、non-operational warning を付ける。
+- 一回限りの implementation prompt は root に置かず、必要事項を現行 docs へ反映した後は active project guidance から除外する。保持は前提にしない。
 - TODO task の source of truth は `Title` field ではなく `### <ID>: [<Category>] <Title>` heading とする。
 - QA verification は front-matter の `qa_status` と本文の `Verdict` を必ず一致させる。
 - Validator には fixture と self-test を持たせ、valid が通るだけでなく invalid が失敗することを確認する。
@@ -28,7 +27,7 @@ related_prs: []
 
 ## Alternatives
 
-- `PROMPT.md` を削除する: `rm` / `git rm` 禁止と履歴価値を考慮し、移動にした。
+- `PROMPT.md` を物理削除する: `rm` / `git rm` 禁止のため、この変更では active guidance から除外する扱いにした。
 - TODO parser を `Title` field 起点のまま強化する: `Title` 欠落タスクを見逃すため採用しない。
 - Validator fixtures を docs だけに残す: validator 自体を実行して確認できないため採用しない。
 

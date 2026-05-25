@@ -10,7 +10,6 @@ references:
   - "_docs/plan/Template/intent-qa-finalization/plan.md"
   - "_docs/intent/Template/intent-qa-finalization/decision.md"
   - "_docs/qa/Template/intent-qa-finalization/test-plan.md"
-  - "_evals/prompts/intent-qa-extension.md"
 related_issues: []
 related_prs: []
 ---
@@ -19,7 +18,7 @@ related_prs: []
 
 ## Summary
 
-Root prompt handling, heading-based TODO validation, QA verdict mapping, validator fixtures, self-test wiring, QA Skill examples, and eval guidance were updated and verified against the local validator suite.
+Root active-guidance cleanup, heading-based TODO validation, QA verdict mapping, validator fixtures, self-test wiring, QA Skill examples, and eval guidance were updated and verified against the local validator suite.
 
 ## Verification Verdict
 
@@ -38,7 +37,7 @@ Verdict: PASS
 | `deno run --allow-read --allow-run scripts/test-validators.mjs` | PASS | Valid fixtures passed; invalid TODO / QA fixtures failed as expected. |
 | `./scripts/check-docs.sh` | PASS | Exit 0; includes validator self-test. |
 | `npx markdownlint-cli2 "_docs/**/*.md" "_evals/**/*.md" "README.md" "AGENTS.md" "TODO.md" "QUICKSTART.md"` | PASS | `Summary: 0 error(s)`. |
-| Deprecated runtime reference grep | PASS | Matches remain only inside `_evals/prompts/intent-qa-extension.md`, which is marked historical / non-operational. |
+| Deprecated runtime reference grep | PASS | No stale active-guidance references remain. |
 | Legacy npm validation command grep | PASS | No matches. |
 | `find . -maxdepth 1 -type f -name "*.md" -print \| sort` | PASS | Root Markdown is `AGENTS.md`, `QUICKSTART.md`, `README.md`, `TODO.md`. |
 | `for f in docs-cleanup docs-prep implementation-prep post-implementation qa-prep qa-review test-maintenance; do cmp -s ".agents/skills/$f/SKILL.md" ".claude/skills/$f/SKILL.md" \|\| echo "DIFF $f"; done` | PASS | No output; paired Skills are synchronized. |
@@ -54,14 +53,14 @@ Verdict: PASS
 
 ## Manual QA Results
 
-- Root `PROMPT.md` was moved to `_evals/prompts/intent-qa-extension.md` with a historical / non-operational warning before the original prompt content.
+- Root one-off prompt requirements were incorporated into current docs, and root guidance was verified not to depend on retaining the prompt.
 - Root Markdown files were reviewed and are active project guidance.
 - QA Skill examples were added to `.agents` and `.claude` copies for `qa-prep`, `test-maintenance`, and `qa-review`.
-- `_evals/agent-workflows/expected-invariants.md` and new eval cases cover malformed TODO headings, qa_status / verdict mismatch, and historical prompt handling.
+- `_evals/agent-workflows/expected-invariants.md` and new eval cases cover malformed TODO headings, qa_status / verdict mismatch, and one-off prompt exclusion from active guidance.
 
 ## Acceptance Criteria Coverage
 
-- AC-001: PASS. Root Markdown list excludes `PROMPT.md`, and historical prompt is under `_evals/prompts/`.
+- AC-001: PASS. Root Markdown list excludes `PROMPT.md`, so active guidance does not depend on a one-off prompt file.
 - AC-002: PASS. `validate-todo.mjs` is heading-based, and invalid TODO fixtures fail as expected.
 - AC-003: PASS. `validate-qa.mjs` rejects mismatched `qa_status` / `Verdict` and `qa_status: in-progress` verification fixtures.
 - AC-004: PASS. `_evals/validator-fixtures/` and `scripts/test-validators.mjs` exist and self-test valid / invalid fixtures.
@@ -70,7 +69,7 @@ Verdict: PASS
 
 ## Invariant Coverage
 
-- INV-001: PASS. One-off prompt is historical and non-operational under `_evals/prompts/`.
+- INV-001: PASS. One-off prompt requirements were incorporated into current docs; retaining the prompt is not part of the operating model.
 - INV-002: PASS. Missing-title and malformed-heading fixtures prove heading-based TODO errors.
 - INV-003: PASS. Status/verdict mismatch and in-progress status fixtures fail.
 - INV-004: PASS. Self-test checks valid success and invalid expected failure cases.

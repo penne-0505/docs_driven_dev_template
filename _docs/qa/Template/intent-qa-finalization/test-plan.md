@@ -9,7 +9,6 @@ updated_at: 2026-05-25
 references:
   - "_docs/plan/Template/intent-qa-finalization/plan.md"
   - "_docs/intent/Template/intent-qa-finalization/decision.md"
-  - "_evals/prompts/intent-qa-extension.md"
 related_issues: []
 related_prs: []
 ---
@@ -21,7 +20,6 @@ related_prs: []
 - TODO task: `Template-Enhance-4`
 - Plan: `_docs/plan/Template/intent-qa-finalization/plan.md`
 - Intent: `_docs/intent/Template/intent-qa-finalization/decision.md`
-- Historical prompt: `_evals/prompts/intent-qa-extension.md`
 
 ## Quality Goal
 
@@ -66,7 +64,7 @@ Risk: Medium. Validator、CI、Skill、documentation rule、agent workflow に�
 | AC-004 | TODO | Validator fixtures cover valid and invalid examples. | validator | `deno run --allow-read --allow-run scripts/test-validators.mjs` | Self-test reports PASS for valid and expected-failure fixtures. | planned |
 | AC-005 | TODO | check-docs and CI include validator self-test. | diff review | `scripts/check-docs.sh`, `.github/workflows/docs-ci.yml` | Self-test command appears in both entrypoints. | planned |
 | AC-006 | TODO | QA Skills contain concrete examples and stay synced. | static check | `cmp -s .agents/skills/<skill>/SKILL.md .claude/skills/<skill>/SKILL.md` | `qa-prep`, `test-maintenance`, and `qa-review` compare equal. | planned |
-| INV-001 | intent | One-off prompts are historical when retained. | doc review | `_evals/prompts/intent-qa-extension.md` | Historical warning says agents must not treat it as current guidance. | planned |
+| INV-001 | intent | One-off prompts are not assumed to remain after their requirements are incorporated. | doc review | active guidance inventory | Agents must not treat one-off prompts as current guidance. | planned |
 | INV-002 | intent | Missing `Title` field is still detected from heading. | fixture test | `_evals/validator-fixtures/todo/invalid/missing-title.md` | Fixture fails validation. | planned |
 | INV-003 | intent | Verdict mapping is enforced. | fixture test | `_evals/validator-fixtures/qa/invalid/status-verdict-mismatch.md` | Fixture fails validation. | planned |
 | INV-004 | intent | Self-test checks both pass and fail cases. | self-test | `scripts/test-validators.mjs` | Script expects exit 0 for valid and non-zero for invalid. | planned |
