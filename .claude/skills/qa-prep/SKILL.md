@@ -15,6 +15,7 @@ Use this skill for:
 - `Risk >= Medium`
 - Bug tasks with regression risk
 - Refactors that need behavior-preservation checks
+- Intentional omissions recorded as design decisions
 - Security / auth / privacy / payment / data safety / migration changes
 - CI / validator / Skill / agent workflow / documentation rule changes
 

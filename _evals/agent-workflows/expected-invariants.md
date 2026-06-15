@@ -19,6 +19,7 @@
 - `Size < M` のタスクは `Plan: None` を許容する。
 - Size >= M tasks require Plan / Intent / QA.
 - Risk >= Medium tasks require Intent / QA.
+- Intentional omissions that future maintainers could mistake for missing work must be recorded lightly or escalated to Intent.
 - High / Critical risk tasks require explicit verification before completion.
 - Bug fixes require regression test or no-test rationale.
 - Refactors require behavior-preservation checks.

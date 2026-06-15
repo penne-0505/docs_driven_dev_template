@@ -2,7 +2,7 @@
 
 ## 0. System Metadata
 
-- **Current Max ID**: `Next ID No: 5` (タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 8` (タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一の ID 発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -110,6 +110,8 @@
 | `Category Refactor` | QA test-plan に behavior-preservation checks を含める。 |
 | Agent workflow / validator / CI / Skill / documentation rule 変更 | QA test-plan に agent misbehavior checks を含める。 |
 
+`Size XS/S` かつ `Risk Low` でも、将来の作業者が未実装と誤認しそうな非対応・制限・省略は intentional omission risk として扱う。その場合は、必須フィールドを増やさず、TODO Description / PR / commit、または必要に応じて Plan Non-Goals / Intent Alternatives に理由を残す。
+
 ## 4. Completion Rules
 
 タスクを `TODO.md` から削除できるのは、以下を満たす場合のみ。
@@ -184,11 +186,12 @@ Risk の詳細は `_docs/standards/quality_assurance.md` を参照する。
 1. `Next ID No` を読み取り、割り当て予定の ID を決定する。
 2. `Next ID No` をインクリメントしてファイルを更新する。
 3. Inbox の内容を解析し、最適な `Area` / `Category` / `Risk` を決定する。
-4. ID を生成する。
-5. Acceptance Criteria を `AC-001` 形式で書く。
-6. 必須文書条件に従い、Plan / Intent / QA / Verification を `None` または canonical path で埋める。
-7. タスクを `Backlog` の末尾に追加する。
-8. 元の Inbox 行を削除する。
+4. intentional omission risk があるか確認する。将来「未実装なので直す」と誤認されそうな非対応・制限・省略がある場合は、Description に理由を残すか、設計判断として Intent を作成する。
+5. ID を生成する。
+6. Acceptance Criteria を `AC-001` 形式で書く。
+7. 必須文書条件に従い、Plan / Intent / QA / Verification を `None` または canonical path で埋める。
+8. タスクを `Backlog` の末尾に追加する。
+9. 元の Inbox 行を削除する。
 
 ### Promote to Ready
 
@@ -374,6 +377,31 @@ Risk の詳細は `_docs/standards/quality_assurance.md` を参照する。
 - **Description**:
   - Context: OSS 配布前に著作者表示をプロジェクトに合わせる。
   - Notes: `Size XS` かつ `Risk Low` のため Plan / Intent / QA は不要。
+- **Plan**: None
+- **Intent**: None
+- **QA**: None
+- **Verification**: None
+
+### Workflow-Chore-7: [Chore] Set incremental adoption scope
+
+- **Title**: [Chore] Set incremental adoption scope
+- **ID**: Workflow-Chore-7
+- **Priority**: P2
+- **Size**: XS
+- **Risk**: Low
+- **Area**: Workflow
+- **Dependencies**: []
+- **Goal**: 既存プロジェクトへ後付け導入する場合に、導入以降に追加した docs だけが検証対象になるよう導入スコープが設定されている。
+- **Acceptance Criteria**:
+  - AC-001: 既存プロジェクトへ導入する場合、CI に `DD_SCOPE_BASE: <導入時点の commit SHA または tag>` が設定されている。
+  - AC-002: `actions/checkout` が `fetch-depth: 0` に設定され、baseline commit を参照できる。
+- **Steps**:
+  1. [ ] 導入時点の commit SHA / tag を baseline として決める
+  2. [ ] CI 環境変数に `DD_SCOPE_BASE` を設定する
+  3. [ ] `actions/checkout` を `fetch-depth: 0` にする
+- **Description**:
+  - Context: 新規プロジェクトでは不要。既存プロジェクトへ後付け導入する場合のみ着手する条件付きタスク。導入しない場合はこのタスクを削除してよい。
+  - Notes: 手順は QUICKSTART「既存プロジェクトへ後付け導入する場合」と `_docs/standards/documentation_operations.md` の段階的導入スコープを参照。`Size XS` かつ `Risk Low` のため Plan / Intent / QA は不要。
 - **Plan**: None
 - **Intent**: None
 - **QA**: None

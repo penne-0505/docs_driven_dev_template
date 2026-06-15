@@ -14,11 +14,12 @@ Use this skill for:
 - `Size >= M`
 - `Risk >= Medium`
 - Architecture decisions
+- Intentional omissions that future maintainers could mistake for missing work
 - Breaking changes or migrations
 - Complex refactors
 - Agent workflow / validator / CI / Skill / documentation rule changes
 
-For `Size XS/S` and `Risk Low`, use `implementation-prep` alone unless a design decision must be recorded.
+For `Size XS/S` and `Risk Low`, use `implementation-prep` alone unless a design decision or intentional omission risk must be recorded beyond TODO / PR / commit notes.
 
 ## Documentation Workflow
 
@@ -31,6 +32,7 @@ For `Size XS/S` and `Risk Low`, use `implementation-prep` alone unless a design 
 | `Risk High / Critical` | Plan, Intent, QA test-plan, verification before completion |
 | Bug with regression risk | QA regression check or no-test rationale |
 | Refactor | behavior-preservation checks |
+| Intentional omission risk affecting future work | Intent, or Plan Non-Goals when a plan already exists |
 | Agent workflow / validator / CI / Skill change | agent misbehavior checks |
 
 ### 2. Create or Update Plan

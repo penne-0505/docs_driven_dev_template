@@ -49,11 +49,12 @@ For `Size XS/S` and `Risk Low` tasks:
 
 - Use this skill alone.
 - Plan / Intent / QA can be `None`.
+- Before keeping them `None`, check intentional omission risk: if a future maintainer could mistake a deliberate limitation, unsupported path, or omission for missing work, record the reason in TODO Description, PR / commit notes, or escalate to docs-prep.
 - Record intent in TODO, PR, commit, or a lightweight follow-up if needed.
 
 ### Standard Track
 
-For `Size >= M`, `Risk >= Medium`, or design-decision work:
+For `Size >= M`, `Risk >= Medium`, design-decision work, or intentional omission risk that affects future work:
 
 - Use `docs-prep`.
 - Use `qa-prep`.

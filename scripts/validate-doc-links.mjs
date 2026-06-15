@@ -1,5 +1,7 @@
 // Deno版 Markdown link / front-matter reference validator: npm / remote import 依存なし
 
+import { loadScope, makeInScope } from "./scope.mjs";
+
 const DOC_ROOTS = ["_docs", "_evals"];
 const ROOT_FILES = ["README.md", "AGENTS.md", "TODO.md", "QUICKSTART.md"];
 const ARCHIVE_TYPES = ["draft", "plan", "survey"];
@@ -273,15 +275,18 @@ const collectIntentReferences = async () => {
   return refs;
 };
 
-const validateArchiveInvariants = async (errors) => {
-  for (const type of FORBIDDEN_ARCHIVE_TYPES) {
-    const dir = `_docs/archives/${type}`;
-    if (await isDirectory(dir)) {
-      errors.push({
-        file: dir,
-        message:
-          "archive directories are only allowed for draft, plan, and survey",
-      });
+const validateArchiveInvariants = async (errors, inScope, scoped) => {
+  // ディレクトリ存在自体を咎める検査は、スコープ有効時は既存構造を判定しないため抑止する。
+  if (!scoped) {
+    for (const type of FORBIDDEN_ARCHIVE_TYPES) {
+      const dir = `_docs/archives/${type}`;
+      if (await isDirectory(dir)) {
+        errors.push({
+          file: dir,
+          message:
+            "archive directories are only allowed for draft, plan, and survey",
+        });
+      }
     }
   }
 
@@ -289,6 +294,7 @@ const validateArchiveInvariants = async (errors) => {
   for await (
     const file of walkFiles("_docs/archives", (path) => path.endsWith(".md"))
   ) {
+    if (!inScope(file)) continue;
     const parts = file.split("/");
     const [, archives, type, area, slug] = parts;
     if (
@@ -330,10 +336,11 @@ const validateArchiveInvariants = async (errors) => {
   }
 };
 
-const validateQaInvariants = async (errors) => {
+const validateQaInvariants = async (errors, inScope) => {
   for await (
     const file of walkFiles("_docs/qa", (path) => path.endsWith(".md"))
   ) {
+    if (!inScope(file)) continue;
     const match = file.match(
       /^_docs\/qa\/([A-Za-z][A-Za-z0-9-]*)\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(test-plan|verification)\.md$/,
     );
@@ -359,11 +366,12 @@ const validateQaInvariants = async (errors) => {
   }
 };
 
-const validateGuideReferenceWarnings = async (warnings) => {
+const validateGuideReferenceWarnings = async (warnings, inScope) => {
   for (const type of ["guide", "reference"]) {
     for await (
       const file of walkFiles(`_docs/${type}`, (path) => path.endsWith(".md"))
     ) {
+      if (!inScope(file)) continue;
       const src = await Deno.readTextFile(file);
       const { attrs } = parseFrontMatter(src);
       if (attrs?.status !== "active") continue;
@@ -403,7 +411,10 @@ const report = (prefix, items, logger) => {
 const run = async () => {
   const errors = [];
   const warnings = [];
-  const files = await markdownFiles();
+  const scope = await loadScope();
+  const inScope = makeInScope(scope);
+  const scoped = scope !== null;
+  const files = (await markdownFiles()).filter(inScope);
 
   for (const file of files) {
     const src = await Deno.readTextFile(file);
@@ -437,9 +448,9 @@ const run = async () => {
     }
   }
 
-  await validateArchiveInvariants(errors);
-  await validateQaInvariants(errors);
-  await validateGuideReferenceWarnings(warnings);
+  await validateArchiveInvariants(errors, inScope, scoped);
+  await validateQaInvariants(errors, inScope);
+  await validateGuideReferenceWarnings(warnings, inScope);
 
   report("WARN", warnings, console.warn);
   if (errors.length) {

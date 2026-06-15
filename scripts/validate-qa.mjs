@@ -1,5 +1,7 @@
 // Deno版 QA document validator: npm / remote import 依存なし
 
+import { loadScope, makeInScope } from "./scope.mjs";
+
 const TODO_FILE = "TODO.md";
 const RISKS = ["Low", "Medium", "High", "Critical"];
 const QA_STATUS_VALUES = [
@@ -502,7 +504,7 @@ const parseTodoTasks = (src) => {
   return tasks;
 };
 
-const validateTodoConsistency = async (errors) => {
+const validateTodoConsistency = async (errors, inScope) => {
   const tasks = parseTodoTasks(await Deno.readTextFile(TODO_FILE));
   for (const task of tasks) {
     const label = task.fields.ID ?? task.fields.Title ?? "(unknown task)";
@@ -512,6 +514,7 @@ const validateTodoConsistency = async (errors) => {
     for (const field of ["QA", "Verification"]) {
       const path = normalizeInlineCode(task.fields[field]);
       if (!path || path === "None") continue;
+      if (!inScope(path)) continue;
       if (!QA_PATH_RE.test(path)) {
         add(errors, TODO_FILE, `${label}: ${field} path is not canonical`);
         continue;
@@ -607,12 +610,14 @@ const run = async () => {
   const errors = [];
   const warnings = [];
   const { roots, fixtureMode } = parseArgs(Deno.args);
+  const inScope = makeInScope(await loadScope());
 
   if (roots.length === 0) {
     add(errors, "(args)", "--fixture requires at least one path");
   }
 
   for await (const file of collectMarkdownFiles(roots)) {
+    if (!inScope(file)) continue;
     const src = await Deno.readTextFile(file);
     const { attrs, error } = parseFrontMatter(src);
     if (error || !attrs) {
@@ -641,7 +646,7 @@ const run = async () => {
   }
 
   if (!fixtureMode) {
-    await validateTodoConsistency(errors);
+    await validateTodoConsistency(errors, inScope);
   }
 
   report("WARN", warnings, console.warn);

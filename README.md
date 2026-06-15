@@ -26,6 +26,8 @@
 
 ローカルでドキュメント検証をまとめて実行する場合は、`scripts/check-docs.sh` を使います。
 
+既存プロジェクトへ後付け導入する場合は、`DD_SCOPE_BASE` に導入時点の commit を設定して「導入以降に追加した docs だけ」を検証対象に絞れます。設定方法は [Quickstart](QUICKSTART.md) と [documentation_operations.md](_docs/standards/documentation_operations.md) を参照してください。
+
 root 直下の Markdown は agent 向けの active guidance として扱われます。一回限りの実装プロンプトを履歴として残す場合は `_evals/prompts/` などへ移し、非運用文書であることを明記してください。
 
 ### カスタマイズ
@@ -73,6 +75,8 @@ If this is your first time using the template, start with the [Quickstart](QUICK
 When creating a distribution ZIP, use GitHub's standard archive or `scripts/create-template-archive.sh` so VCS metadata such as `.git` / `.jj` is not included.
 
 Use `scripts/check-docs.sh` to run the local documentation validators together.
+
+When adopting this template in an existing project, set `DD_SCOPE_BASE` to the adoption commit so that only docs added after adoption are validated. See the [Quickstart](QUICKSTART.md) and [documentation_operations.md](_docs/standards/documentation_operations.md) for setup.
 
 Root-level Markdown is treated as active guidance for agents. If you keep a one-off implementation prompt for history, move it under `_evals/prompts/` or another historical location and mark it as non-operational.
 

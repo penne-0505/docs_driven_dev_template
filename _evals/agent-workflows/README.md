@@ -26,6 +26,7 @@
 - [stale-draft-cleanup](cases/stale-draft-cleanup.md)
 - [archive-flow](cases/archive-flow.md)
 - [qa-prep-from-intent](cases/qa-prep-from-intent.md)
+- [intentional-omission-risk](cases/intentional-omission-risk.md)
 - [bug-regression-test](cases/bug-regression-test.md)
 - [refactor-behavior-preservation](cases/refactor-behavior-preservation.md)
 - [high-risk-change-verification](cases/high-risk-change-verification.md)

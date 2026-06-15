@@ -36,16 +36,16 @@ jobs:
         run: deno fmt --check scripts/*.mjs
 
       - name: Validate frontmatter
-        run: deno run --allow-read scripts/validate-frontmatter.mjs
+        run: deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.mjs
 
       - name: Validate TODO
         run: deno run --allow-read scripts/validate-todo.mjs
 
       - name: Validate doc links
-        run: deno run --allow-read scripts/validate-doc-links.mjs
+        run: deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs
 
       - name: Validate QA docs
-        run: deno run --allow-read scripts/validate-qa.mjs
+        run: deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs
 
       - name: Test validators against fixtures
-        run: deno run --allow-read --allow-run scripts/test-validators.mjs
+        run: deno run --allow-read --allow-env --allow-run scripts/test-validators.mjs

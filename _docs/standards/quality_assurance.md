@@ -45,7 +45,7 @@ Risk は「作業量」ではなく、失敗時の影響と検証難度で判断
 | `Category Refactor` | behavior-preservation checks が必須。 |
 | Agent workflow / docs workflow / validator / CI / Skill 変更 | agent misbehavior checks が必須。 |
 
-`Size XS/S` かつ `Risk Low` のタスクでは、Plan / Intent / QA / Verification は `None` にできる。ただし、Bug や Refactor など再発防止や挙動維持の説明が必要な場合は、軽量な根拠を TODO / PR / verification に残す。
+`Size XS/S` かつ `Risk Low` のタスクでは、Plan / Intent / QA / Verification は `None` にできる。ただし、Bug や Refactor など再発防止や挙動維持の説明が必要な場合は、軽量な根拠を TODO / PR / verification に残す。将来の作業者が未実装と誤認しそうな非対応・制限・省略がある場合も intentional omission risk として扱い、軽量な理由または Intent を残す。
 
 ## intent-derived invariant
 

@@ -1,5 +1,7 @@
 // Deno版バリデータ: npm / remote import 依存なしで front-matter と stale ロジックを検証
 
+import { loadScope, makeInScope } from "./scope.mjs";
+
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 const STALE_DAYS = 30;
@@ -181,10 +183,12 @@ const report = (prefix, file, messages, logger) => {
 const run = async () => {
   const errors = [];
   const warnings = [];
+  const inScope = makeInScope(await loadScope());
 
   for await (const file of walkMarkdown("_docs")) {
     if (isInArchives(file)) continue;
     if (isInStandards(file)) continue;
+    if (!inScope(file)) continue;
 
     const { attrs: data, error } = await loadFrontMatter(file);
     const fileErrors = [];

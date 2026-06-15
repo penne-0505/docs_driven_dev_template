@@ -34,6 +34,7 @@ This skill determines whether implementation can be considered complete.
 
 - Do not mark PASS just because tests passed.
 - Confirm intent-derived invariants are preserved.
+- Confirm documented intentional omissions are still visible and have not been "fixed" away without updating Intent / QA.
 - Do not list commands as run unless they were actually run.
 - Do not leave residual risks vague.
 

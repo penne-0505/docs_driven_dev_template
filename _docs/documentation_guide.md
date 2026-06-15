@@ -3,7 +3,7 @@ title: Documentation Guide
 status: active
 draft_status: n/a
 created_at: 2025-12-07
-updated_at: 2026-05-25
+updated_at: 2026-06-15
 references:
   - "_docs/standards/documentation_guidelines.md"
   - "_docs/standards/documentation_operations.md"
@@ -97,6 +97,7 @@ references:
 - Plan / Intent / QA は `None` にできます。
 - `TODO.md` の Acceptance Criteria と Steps に従って直接作業します。
 - Bug の場合は regression test または no-test rationale を残します。
+- 将来の作業者が未実装と誤認しそうな非対応・制限・省略がある場合は、TODO Description / PR / commit に理由を残し、後続変更に影響するなら Intent に昇格します。
 
 ### 1. `Size >= M` の変更
 
@@ -150,14 +151,14 @@ Verdict と `qa_status` は次の対応にします。
 
 ```bash
 deno fmt --check scripts/*.mjs
-deno run --allow-read scripts/validate-frontmatter.mjs
+deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.mjs
 deno run --allow-read scripts/validate-todo.mjs
-deno run --allow-read scripts/validate-doc-links.mjs
-deno run --allow-read scripts/validate-qa.mjs
-deno run --allow-read --allow-run scripts/test-validators.mjs
+deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs
+deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs
+deno run --allow-read --allow-env --allow-run scripts/test-validators.mjs
 ```
 
-まとめて実行する場合:
+`--allow-env` / `--allow-run=git` は段階的導入スコープ（`DD_SCOPE_BASE`）向けの権限です。既存プロジェクトへ後付け導入し「導入以降に追加した docs だけ」を検証したい場合は、`_docs/standards/documentation_operations.md` の段階的導入スコープを参照してください。まとめて実行する場合:
 
 ```bash
 ./scripts/check-docs.sh

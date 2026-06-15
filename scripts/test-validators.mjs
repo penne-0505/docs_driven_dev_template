@@ -64,6 +64,43 @@ const testCase = async ({ kind, target, shouldPass }) => {
   return false;
 };
 
+// スコープ機構の決定的テスト: DD_SCOPE_PATHS が対象を絞ることを git なしで確認する。
+const SCOPE_FIXTURE =
+  "_evals/validator-fixtures/qa/invalid/missing-invariant.md";
+
+const runQaWithScope = async (scopePaths) => {
+  const command = new Deno.Command(deno, {
+    args: [
+      "run",
+      "--allow-read",
+      "--allow-env",
+      "scripts/validate-qa.mjs",
+      "--fixture",
+      SCOPE_FIXTURE,
+    ],
+    env: { DD_SCOPE_PATHS: scopePaths },
+    stdout: "piped",
+    stderr: "piped",
+  });
+  const output = await command.output();
+  return output.code;
+};
+
+const scopeCase = async ({ label, scopePaths, shouldPass }) => {
+  const code = await runQaWithScope(scopePaths);
+  const passed = shouldPass ? code === 0 : code !== 0;
+  if (passed) {
+    console.log(`PASS scope ${label}`);
+    return true;
+  }
+  console.error(
+    `FAIL scope ${label}: exit ${code} (expected ${
+      shouldPass ? "0" : "non-zero"
+    })`,
+  );
+  return false;
+};
+
 let ok = true;
 
 for (const target of TODO_VALID) {
@@ -78,5 +115,18 @@ for (const target of QA_VALID) {
 for (const target of QA_INVALID) {
   ok = await testCase({ kind: "qa", target, shouldPass: false }) && ok;
 }
+
+// 対象外パスのみを scope に置くと、invalid fixture は判定されずに pass する。
+ok = await scopeCase({
+  label: "out-of-scope invalid fixture is skipped",
+  scopePaths: "_evals/validator-fixtures/qa/valid/test-plan.md",
+  shouldPass: true,
+}) && ok;
+// scope に含めると、従来通り invalid fixture が fail する。
+ok = await scopeCase({
+  label: "in-scope invalid fixture still fails",
+  scopePaths: SCOPE_FIXTURE,
+  shouldPass: false,
+}) && ok;
 
 if (!ok) Deno.exit(1);
