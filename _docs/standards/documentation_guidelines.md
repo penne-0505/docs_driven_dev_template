@@ -70,7 +70,7 @@ _docs/archives/{draft,plan,survey}/<Area>/<slug>/...
 - **読者**: 設計判断の背景を理解したい開発者。
 - **内容**: Context / Decision / Alternatives / Rationale / Consequences / Quality Implications / Intent-derived Invariants。
 - **QA**: intent は QA の一次資料であり、守るべき invariant を抽出する。
-- **ライフサイクル**: 恒久的な設計判断ログとして保持し、archives へ移送しない。
+- **ライフサイクル**: 恒久的な設計判断ログとして保持し、archives へ移送しない。テンプレート repo 自身の meta-work に対する例外は `_docs/standards/documentation_operations.md` を参照する。
 
 ### `_docs/qa/<Area>/<slug>/test-plan.md`
 
@@ -78,7 +78,7 @@ _docs/archives/{draft,plan,survey}/<Area>/<slug>/...
 - **読者**: 実装者、レビュアー、QA 担当、coding agent。
 - **内容**: Source of Intent / Quality Goal / Acceptance Criteria / Intent-derived Invariants / Risk Assessment / Test Matrix。
 - **作成条件**: `Size >= M` または `Risk >= Medium` で必須。
-- **ライフサイクル**: QA docs は persistent quality records であり、archives へ移送しない。obsolete な場合は `status: obsolete` または `status: superseded` にする。
+- **ライフサイクル**: QA docs は persistent quality records であり、archives へ移送しない。obsolete な場合は `status: obsolete` または `status: superseded` にする。テンプレート repo 自身の meta-work に対する例外は `_docs/standards/documentation_operations.md` を参照する。
 
 ### `_docs/qa/<Area>/<slug>/verification.md`
 

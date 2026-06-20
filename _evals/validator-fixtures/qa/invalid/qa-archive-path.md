@@ -7,17 +7,17 @@ risk: Medium
 created_at: 2026-05-25
 updated_at: 2026-05-25
 references:
-  - "_docs/intent/Template/intent-qa-finalization/decision.md"
+  - "_docs/intent/Workflow/incremental-adoption-scope/decision.md"
 related_issues: []
 related_prs: []
-fixture_path: "_docs/archives/qa/Template/intent-qa-finalization/test-plan.md"
+fixture_path: "_docs/archives/qa/Workflow/incremental-adoption-scope/test-plan.md"
 ---
 
 # Fixture QA archive path
 
 ## Source of Intent
 
-- Intent: `_docs/intent/Template/intent-qa-finalization/decision.md`
+- Intent: `_docs/intent/Workflow/incremental-adoption-scope/decision.md`
 
 ## Quality Goal
 

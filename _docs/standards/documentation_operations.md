@@ -100,6 +100,18 @@ references:
 - archive checklist を満たす一時ドキュメントの移送に限り、`mv` / `git mv` を許可する。
 - archive 移送は削除ではなく、履歴保持のための移動として扱う。
 - archive 実行前に、対応する `intent` が存在し、対象一時ドキュメントへの参照または相互リンクがあることを確認する。
+- 「テンプレート repo 自身の meta-work に対する例外」は persistent records 分類上の整理にとどまり、本節の原則を上書きしない。
+
+## テンプレート repo 自身の meta-work に対する例外
+
+本 repo は docs-driven development のテンプレートとして配布される。テンプレート利用者は新規プロジェクトとしてこの repo を起点に作業するため、**テンプレート repo 自身の改善作業 (meta-work) に伴って生成された intent / plan / qa docs** を配布物に混入させない運用を許容する。
+
+- 対象: テンプレート repo そのものを磨くための作業として作成された intent / plan / qa。たとえば validator 自体の挙動を決める decision、テンプレートの workflow を整える plan、テンプレ運用上の自己検証 verification など。Area 名としては `Template` や同等のメタ作業領域が該当する。
+- 分類上の扱い: 上記対象は persistent records の射程外とする。決定事項が `_docs/standards/` または `_docs/standards/templates/` へ吸収された後は、ライフサイクル上「保持義務のあるドキュメント」とは見なさない。
+- 操作の権限: 本例外は分類の整理であり、「破壊的操作と archive 移送」の原則を上書きしない。実ファイルに対する操作は同節の通常ルールに従う。
+- 適用しない範囲: 利用者プロジェクトとして clone した後の通常運用には適用しない。利用者側 intent / qa は引き続き persistent records として扱い、`status: superseded` / `status: obsolete` で処理する。
+
+この例外を設ける理由は二つある。第一に、配布物に meta-work 履歴が混入すると、新規利用者が「テンプレートの一部の規約・例」と誤読しやすい。実例として、過去に coding agent が `_docs/intent/Template/...` を active guidance / 参照例として扱った事象がある。第二に、「持続的記録として残す」原則は **テンプレートを適用したプロジェクト** を想定して書かれており、テンプレート自身の meta-work には射程が及ばない。テンプレ repo に対しては git 履歴がその役割を担う。
 
 ## Root Markdown と一回限り prompt
 
