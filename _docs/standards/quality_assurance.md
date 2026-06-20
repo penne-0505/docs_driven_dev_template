@@ -70,6 +70,45 @@ Invariant:
 3. その状態を検出できる AC / INV に変換する。
 4. 自動テスト・validator・手動 QA・diff review のどれで確認するか Test Matrix に割り当てる。
 
+## intent ↔ code traceability
+
+自己説明的なコードには限度がある。とくに why not（なぜその実装をしなかったか）はコードに不在として現れ、テストや git blame では拾いにくい。コードを読んでいる作業者や agent が、意図的な省略・非自明な実装の形を「未実装」「不要」と誤認して設計判断を壊すのを防ぐため、コードから intent へ到達する手がかりを残す。
+
+詳細は [code-intent-traceability decision](../intent/Workflow/code-intent-traceability/decision.md) を参照する。
+
+### いつ参照を残すか（ターゲット型）
+
+- 全コード・全コメントへの一律義務化はしない。Fast Track の軽量さを壊さないため、対象を絞る。
+- 残す対象は、設計判断を体現していて、素朴な読み手が誤って「直す」「消す」をしうる非自明な箇所に限る。例: 意図的な省略、互換性のために残した形、「冗長に見えるが必要」な処理、性能や順序のための非直感的な実装。
+
+### テストとコメントの線引き
+
+- 壊れたら落ちる形でテスト化できる不変条件は、テスト（INV 名）に割り当てる（`test-maintenance` 参照）。
+- テスト化しにくい why not・意図的省略・構造的選択は、コードコメントに残す。
+- 同一条件をテストとコメントで二重義務化しない。
+
+### 参照書式
+
+アンカーは安定 ID（`INV-xxx` / `AC-xxx`）を主、intent slug を従にする。生 doc パスのみの参照は、曖昧で腐りやすいため正典にしない（intent は archive しないので ID とパスは安定する）。
+
+grep 可能な接頭辞を用いる。
+
+```text
+// intent: INV-003 (Workflow/intentional-omission-risk) — why / why not の一行
+// intent why-not: INV-002 (<Area>/<slug>) — なぜその実装をしなかったか
+```
+
+### 強制レベル
+
+- コード参照の有無は validator で error として機械強制しない。「参照が要るほど非自明か」は機械判定できず、強制すればノイズと形骸化を生む。
+- 遵守は skill（`implementation-prep` / `test-maintenance` / `post-implementation`）と review で担保する。
+- 参照先 INV / intent slug の実在確認（リンク切れ検出）は、将来 validator で任意に補える。これは参照の有無ではなく、参照先の存在のみを対象にする。
+
+### intent 側の書き方
+
+- Intent-derived Invariants は、安定 ID かつコードから一行で引用できる粒度・断定形で書く。
+- 任意で、各 INV が「どこで体現・enforce されているか」を示す back-reference を intent に残してよい。
+
 ## test matrix
 
 test matrix は最低限、以下の列を持つ。

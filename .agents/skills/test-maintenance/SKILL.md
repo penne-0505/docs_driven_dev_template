@@ -25,6 +25,14 @@ This skill keeps executable tests connected to the design and QA record.
 - Use snapshots only when they protect intentional output and the intent is clear.
 - Include `AC-001` / `INV-001` identifiers in test names or comments when practical.
 
+## Test vs Comment Split
+
+Keep code traceable to intent without doubling the effort. See `quality_assurance.md` (intent ↔ code traceability).
+
+- If an invariant can fail a test, assign it to a test named with its INV ID.
+- If a decision cannot be asserted by a test — why not, an intentional omission, a structural choice — anchor it in a code comment instead.
+- Do not enforce the same condition through both a test and a comment.
+
 ## Example Test Naming
 
 When practical, include AC or INV IDs in test names or comments.

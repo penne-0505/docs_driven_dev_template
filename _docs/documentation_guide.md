@@ -68,6 +68,14 @@ references:
 - 実行可能なテストは、コードベース側の標準的なテストディレクトリに置きます。
 - `verification.md` の `qa_status` は本文の `Verdict` と一致させます。
 
+## intent ↔ code traceability
+
+- 設計判断を体現した非自明なコード（とくに why not・意図的な省略）には、intent への参照コメントを残します。全コード義務ではなくターゲット型です。
+- アンカーは安定 ID を主にします: `// intent: INV-003 (Workflow/<slug>) — 一行`。
+- テストで落とせる不変条件はテスト（INV 名）へ、テスト化しにくい why not はコメントへ。二重には書きません。
+- 参照の有無は validator で強制しません。skill と review で担保します。
+- 正典は `_docs/standards/quality_assurance.md` の intent ↔ code traceability です。
+
 ## Front-matter クイックリファレンス
 
 全ての運用対象ドキュメントで以下の8項目が必須です。

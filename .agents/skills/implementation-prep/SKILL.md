@@ -25,6 +25,7 @@ This skill collects requirements, aligns them with repository documentation, and
 - For Bug tasks, confirm regression test or no-test rationale is planned.
 - For Refactor tasks, confirm behavior-preservation checks are planned.
 - For Agent workflow / validator / CI / Skill / documentation rule changes, confirm agent misbehavior checks are planned.
+- Plan to anchor non-obvious code to intent: where a deliberate decision (especially a why not or intentional omission) would read as missing or removable, leave a `// intent: INV-00X (<Area>/<slug>) — ...` comment. This is targeted, not blanket. See `quality_assurance.md` (intent ↔ code traceability).
 
 ## Document & TODO Strategy
 

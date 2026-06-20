@@ -35,9 +35,14 @@ related_prs: []
 - QA test-plan で確認すべき観点
 
 ## Intent-derived Invariants
+<!-- 安定 ID を振り、コードから一行で引用できる粒度・断定形で書く。非自明なコードはこの ID を `// intent: INV-00X (<Area>/<slug>) — ...` でアンカーできる。詳細は quality_assurance.md の intent ↔ code traceability を参照。 -->
 - INV-001:
 - INV-002:
 - INV-003:
+
+## Enforced in (optional)
+<!-- 任意。各 INV が体現・enforce されている場所への back-reference。code 起点だけでなく intent 起点でも実装箇所へ辿れるようにする。 -->
+- INV-001:
 
 ## Rollback / Follow-ups
 - ロールバック方針や追加フォロー項目
