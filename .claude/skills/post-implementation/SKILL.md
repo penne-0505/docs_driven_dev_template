@@ -27,20 +27,19 @@ This skill closes implementation work by verifying outcomes, updating documentat
 
 ## Validation Commands
 
-Use Deno validators, not old npm aliases:
-
-```bash
-deno fmt --check scripts/*.mjs
-deno run --allow-read scripts/validate-frontmatter.mjs
-deno run --allow-read scripts/validate-todo.mjs
-deno run --allow-read scripts/validate-doc-links.mjs
-deno run --allow-read scripts/validate-qa.mjs
-```
-
-If available, run the wrapper:
+Prefer the wrapper:
 
 ```bash
 ./scripts/check-docs.sh
+```
+
+Use Deno validators, not old npm aliases, when isolating a failure:
+
+```bash
+deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.mjs
+deno run --allow-read scripts/validate-todo.mjs
+deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs
+deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs
 ```
 
 ## TODO.md Cleanup

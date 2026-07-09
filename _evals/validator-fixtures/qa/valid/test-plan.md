@@ -44,8 +44,8 @@ Use `validate-qa.mjs` in fixture mode.
 
 | ID | Source | Requirement / Invariant | Test Type | Command / File | Expected Evidence | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC-001 | fixture | Valid QA test-plan passes. | validator | `deno run --allow-read scripts/validate-qa.mjs _evals/validator-fixtures/qa/valid` | Validator exits 0. | planned |
-| INV-001 | intent | QA docs are not archived. | validator | `deno run --allow-read scripts/validate-qa.mjs _evals/validator-fixtures/qa/valid` | Canonical QA path is accepted. | planned |
+| AC-001 | fixture | Valid QA test-plan passes. | validator | `deno run --allow-read scripts/validate-qa.mjs --fixture _evals/validator-fixtures/qa/valid` | Validator exits 0. | planned |
+| INV-001 | intent | QA docs are not archived. | validator | `deno run --allow-read scripts/validate-qa.mjs --fixture _evals/validator-fixtures/qa/valid` | Canonical QA path is accepted. | planned |
 
 ## Manual QA Checklist
 

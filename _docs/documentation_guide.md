@@ -163,7 +163,9 @@ deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.m
 deno run --allow-read scripts/validate-todo.mjs
 deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs
 deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs
-deno run --allow-read --allow-env --allow-run scripts/test-validators.mjs
+deno run --allow-read --allow-write --allow-env --allow-run scripts/test-validators.mjs
+deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.mjs
+deno run --allow-read scripts/test-agent-workflow-smoke.mjs
 ```
 
 `--allow-env` / `--allow-run=git` は段階的導入スコープ（`DD_SCOPE_BASE`）向けの権限です。既存プロジェクトへ後付け導入し「導入以降に追加した docs だけ」を検証したい場合は、`_docs/standards/documentation_operations.md` の段階的導入スコープを参照してください。まとめて実行する場合:
@@ -175,7 +177,7 @@ deno run --allow-read --allow-env --allow-run scripts/test-validators.mjs
 手元で Node.js / npx が使える場合は、markdownlint も実行できます。
 
 ```bash
-npx markdownlint-cli2 "_docs/**/*.md" "_evals/**/*.md" "README.md" "AGENTS.md" "TODO.md" "QUICKSTART.md"
+npx markdownlint-cli2 "_docs/**/*.md" "_evals/**/*.md" "README.md" "AGENTS.md" "TODO.md" "QUICKSTART.md" "!_docs/archives/**/*" "!_docs/standards/templates/**/*" --config .markdownlint.jsonc
 ```
 
 ## トラブルシューティング

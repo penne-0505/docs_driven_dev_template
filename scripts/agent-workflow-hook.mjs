@@ -173,7 +173,8 @@ const relevantStopPaths = (paths) => {
       path.startsWith("scripts/validate-") ||
       path === "scripts/check-docs.sh" ||
       path === "scripts/scope.mjs" ||
-      path === "scripts/agent-workflow-hook.mjs"
+      path === "scripts/agent-workflow-hook.mjs" ||
+      path === "scripts/test-agent-workflow-smoke.mjs"
     ),
     archive: normalized.filter((path) => path.startsWith("_docs/archives/")),
     temporaryDocs: normalized.filter((path) =>

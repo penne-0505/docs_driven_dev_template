@@ -62,4 +62,4 @@ The QA test plan must include:
 | ID | Source | Requirement / Invariant | Test Type | Command / File | Expected Evidence | Status |
 |---|---|---|---|---|---|---|
 | AC-001 | TODO | Size >= M tasks require Plan / Intent / QA. | validator | `deno run --allow-read scripts/validate-todo.mjs` | Invalid task without QA fails validation. | planned |
-| INV-001 | intent | QA docs must not be archived. | validator | `deno run --allow-read scripts/validate-doc-links.mjs` | `_docs/archives/qa/**` is rejected. | planned |
+| INV-001 | intent | QA docs must not be archived. | validator | `deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs` | `_docs/archives/qa/**` is rejected. | planned |

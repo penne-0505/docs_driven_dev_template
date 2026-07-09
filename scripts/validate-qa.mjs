@@ -504,7 +504,7 @@ const parseTodoTasks = (src) => {
   return tasks;
 };
 
-const validateTodoConsistency = async (errors, inScope) => {
+const validateTodoConsistency = async (errors) => {
   const tasks = parseTodoTasks(await Deno.readTextFile(TODO_FILE));
   for (const task of tasks) {
     const label = task.fields.ID ?? task.fields.Title ?? "(unknown task)";
@@ -514,7 +514,6 @@ const validateTodoConsistency = async (errors, inScope) => {
     for (const field of ["QA", "Verification"]) {
       const path = normalizeInlineCode(task.fields[field]);
       if (!path || path === "None") continue;
-      if (!inScope(path)) continue;
       if (!QA_PATH_RE.test(path)) {
         add(errors, TODO_FILE, `${label}: ${field} path is not canonical`);
         continue;
@@ -564,7 +563,7 @@ const parseArgs = (args) => {
   if (args[0] === "--fixture") {
     return { roots: args.slice(1), fixtureMode: true };
   }
-  return { roots: args, fixtureMode: true };
+  return { roots: args, fixtureMode: false };
 };
 
 const collectMarkdownFiles = async function* (roots) {
@@ -646,7 +645,7 @@ const run = async () => {
   }
 
   if (!fixtureMode) {
-    await validateTodoConsistency(errors, inScope);
+    await validateTodoConsistency(errors);
   }
 
   report("WARN", warnings, console.warn);

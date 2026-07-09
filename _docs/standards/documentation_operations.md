@@ -235,10 +235,11 @@ draft の stale 管理向け任意フィールド:
 
 ## 段階的導入スコープ (Incremental Adoption)
 
-既存プロジェクトへ後付け導入する際、テンプレート規約に従っていない既存 docs が一斉に検証対象となり CI が埋まるのを避けるため、docs validator は「導入以降に追加された docs」だけを判定対象に絞る opt-in スコープ機構を持つ。設計判断は `_docs/intent/Workflow/incremental-adoption-scope/decision.md` を参照する。
+既存プロジェクトへ後付け導入する際、テンプレート規約に従っていない既存 docs が一斉に検証対象となり CI が埋まるのを避けるため、docs validator は「導入以降に追加された docs」だけを判定対象に絞る opt-in スコープ機構を持つ。本節を段階的導入スコープの正典とする。
 
 - **既定は全走査**: 環境変数が未設定なら、各 validator は従来通り全 docs を走査する。テンプレート自身の CI はこの既定で dogfooding を続ける。
-- **`DD_SCOPE_BASE`**: 導入時点の git ref（commit / tag）を設定すると、`git diff --name-only --diff-filter=A <ref>...HEAD` で得た「追加されたファイル」のみを判定対象にする。既存ファイルは判定しない。一度導入後に既存ファイルを編集してもスコープには入らない（追加のみ）。
+- **`DD_SCOPE_BASE`**: 導入時点の git ref（commit / tag）を設定すると、`git diff --name-only --diff-filter=A <ref>...HEAD` で得た「追加されたファイル」のみを判定対象にする。既存ファイルは判定しない。一度導入後に既存ファイルを編集しても、既定ではスコープに入らない（追加のみ）。
+- **`DD_SCOPE_DIFF_FILTER`**: `DD_SCOPE_BASE` 使用時の git `--diff-filter` を上書きする。既定は `A`。既存 docs を編集した時点で管理対象にしたい導入先では `ACMR` を設定する。
 - **`DD_SCOPE_PATHS`**: 改行 / コロン区切りの明示パスリスト。CI で対象集合を自前計算する場合やテスト向け。優先順位は `DD_SCOPE_PATHS > DD_SCOPE_BASE > 未設定`。
 - **対象 validator**: `validate-frontmatter` / `validate-doc-links` / `validate-qa` がスコープを共有する。母集合決定は `scripts/scope.mjs` に集約されている。
 - **`TODO.md` は常時検証**: `validate-todo.mjs` はスコープの影響を受けない。運用台帳は導入時点から管理対象とする。
@@ -251,6 +252,8 @@ draft の stale 管理向け任意フィールド:
 ```yaml
 env:
   DD_SCOPE_BASE: <導入時点の commit SHA または tag>
+  # Optional: include edited / copied / modified / renamed docs as managed.
+  # DD_SCOPE_DIFF_FILTER: ACMR
 ```
 
 問題が出た場合は環境変数を外すだけで全走査の従来挙動へ復帰できる（コード変更不要）。

@@ -28,7 +28,7 @@ Verdict: PASS
 
 | Command / Test | Result | Notes |
 | --- | --- | --- |
-| `deno run --allow-read scripts/validate-qa.mjs _evals/validator-fixtures/qa/valid` | PASS | Valid fixture directory exits 0. |
+| `deno run --allow-read scripts/validate-qa.mjs --fixture _evals/validator-fixtures/qa/valid` | PASS | Valid fixture directory exits 0. |
 
 ## Automated Test Results
 

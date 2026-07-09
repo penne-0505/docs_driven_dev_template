@@ -72,9 +72,7 @@ Invariant:
 
 ## intent ↔ code traceability
 
-自己説明的なコードには限度がある。とくに why not（なぜその実装をしなかったか）はコードに不在として現れ、テストや git blame では拾いにくい。コードを読んでいる作業者や agent が、意図的な省略・非自明な実装の形を「未実装」「不要」と誤認して設計判断を壊すのを防ぐため、コードから intent へ到達する手がかりを残す。
-
-詳細は [code-intent-traceability decision](../intent/Workflow/code-intent-traceability/decision.md) を参照する。
+自己説明的なコードには限度がある。とくに why not（なぜその実装をしなかったか）はコードに不在として現れ、テストや git blame では拾いにくい。コードを読んでいる作業者や agent が、意図的な省略・非自明な実装の形を「未実装」「不要」と誤認して設計判断を壊すのを防ぐため、コードから intent へ到達する手がかりを残す。本節を intent と code の traceability に関する正典とする。
 
 ### いつ参照を残すか（ターゲット型）
 
@@ -94,7 +92,7 @@ Invariant:
 grep 可能な接頭辞を用いる。
 
 ```text
-// intent: INV-003 (Workflow/intentional-omission-risk) — why / why not の一行
+// intent: INV-003 (<Area>/<slug>) — why / why not の一行
 // intent why-not: INV-002 (<Area>/<slug>) — なぜその実装をしなかったか
 ```
 
