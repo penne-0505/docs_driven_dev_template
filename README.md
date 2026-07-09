@@ -30,6 +30,8 @@
 
 Codex / Claude Code 向けの lifecycle hook を同梱しています。hook は docs や TODO を自動更新せず、SessionStart で workflow context を再注入し、Stop で検証・整理・archive 境界の見落としを促し、PreToolUse で恒久削除や sensitive file 操作を止めるための guardrail です。利用時は各 agent の `/hooks` で内容を確認して信頼してください。
 
+久しぶりの再開や handoff 探索では、`docs-inventory` skill が TODO、intent、QA、guide、reference、一時 docs の棚卸しを行います。これは read-only の診断であり、整理や archive 実行は `docs-cleanup` の役割です。
+
 root 直下の Markdown は agent 向けの active guidance として扱われます。一回限りの実装プロンプトを履歴として残す場合は `_evals/prompts/` などへ移し、非運用文書であることを明記してください。
 
 ### カスタマイズ
@@ -81,6 +83,8 @@ Use `scripts/check-docs.sh` to run the local documentation validators together.
 When adopting this template in an existing project, set `DD_SCOPE_BASE` to the adoption commit so that only docs added after adoption are validated. See the [Quickstart](QUICKSTART.md) and [documentation_operations.md](_docs/standards/documentation_operations.md) for setup.
 
 Lifecycle hooks for Codex and Claude Code are included. They do not update docs or TODOs automatically; they reinject workflow context on SessionStart, nudge missed verification / cleanup / archive-boundary work on Stop, and block permanent deletion or sensitive-file operations on PreToolUse. Review and trust them through each agent's `/hooks` UI before use.
+
+For project resumes or handoff discovery, the `docs-inventory` skill audits TODO, intent, QA, guide, reference, and temporary docs. It is a read-only diagnosis; cleanup and archive execution belong to `docs-cleanup`.
 
 Root-level Markdown is treated as active guidance for agents. If you keep a one-off implementation prompt for history, move it under `_evals/prompts/` or another historical location and mark it as non-operational.
 

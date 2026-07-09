@@ -8,13 +8,14 @@ const SESSION_CONTEXT = [
   "Docs-driven workflow reminder:",
   "- Read AGENTS.md, TODO.md, _docs/documentation_guide.md, and relevant _docs/standards before implementation.",
   "- Skills are not automatic. Use implementation-prep before multi-file or document-aligned work.",
+  "- Use docs-inventory for current-state triage, handoff discovery, stale-doc audits, or concerns that docs have become ceremonial.",
   "- For Size >= M or Risk >= Medium tasks, use docs-prep and qa-prep before implementation, and qa-review before completion.",
   "- Use docs-cleanup when draft/plan/survey/archive boundaries or substantial documentation cleanup are involved.",
   "- Hooks are guardrails only: do not let them replace judgement, QA evidence, or explicit verification notes.",
 ].join("\n");
 
 const CLOSURE_TERMS_RE =
-  /check-docs|validate-|qa-review|docs-cleanup|post-implementation|verification|verdict|residual risk|未検証|検証|残リスク|実行できなかった|deferred/i;
+  /check-docs|validate-|docs-inventory|qa-review|docs-cleanup|post-implementation|verification|verdict|residual risk|未検証|検証|残リスク|実行できなかった|deferred/i;
 
 const COMPLETION_TERMS_RE =
   /完了|対応しました|実装しました|更新しました|修正しました|追加しました|done|completed|implemented|fixed|updated|added|finished|pass/i;
@@ -226,6 +227,7 @@ export const analyzeStop = ({ input = {}, dirtyPaths = [] }) => {
   const actions = [
     "Before finishing, handle the docs-driven closure explicitly:",
     "- If TODO.md or _docs changed, run ./scripts/check-docs.sh or state why it cannot run.",
+    "- If the request is current-state triage, handoff discovery, or documentation health review, use docs-inventory before cleanup.",
     "- If the task is Size >= M or Risk >= Medium, use qa-review and record verification before completion.",
     "- If draft/plan/survey cleanup or archives are involved, use docs-cleanup. Do not archive intent or QA docs.",
     "- Mention commands actually run and remaining gaps in the final response.",

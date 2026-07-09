@@ -63,7 +63,7 @@ assert(
     dirtyPaths: ["TODO.md"],
     input: {
       last_assistant_message:
-        "対応しました。検証として ./scripts/check-docs.sh を実行しました。",
+        "対応しました。docs-inventoryで棚卸しし、検証として ./scripts/check-docs.sh を実行しました。",
     },
   }) === null,
   "stop hook allows explicit closure evidence",
