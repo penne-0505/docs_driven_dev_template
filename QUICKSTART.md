@@ -22,6 +22,18 @@
 6. 実装後、必要な verification を `_docs/qa/<Area>/<slug>/verification.md` に残す。
 7. 一回限りの実装プロンプトを root に残さない。残す必要がある場合は `_evals/prompts/` 等に移し、非運用の履歴資料として明記する。
 
+### Agent lifecycle hooks
+
+このテンプレートは Codex / Claude Code 向けの lifecycle hook を同梱しています。
+
+- Codex: [.codex/hooks.json](.codex/hooks.json)
+- Claude Code: [.claude/settings.json](.claude/settings.json)
+- 共通 script: [scripts/agent-workflow-hook.mjs](scripts/agent-workflow-hook.mjs)
+
+hook は docs を自動更新しません。SessionStart で workflow context を再注入し、Stop で `qa-review` / `docs-cleanup` / `check-docs` の見落としを促し、PreToolUse で `rm` / `git rm` / file deletion / sensitive file 操作を止めます。
+
+初回利用時は各 agent の `/hooks` で内容を確認し、信頼してください。不要な場合は、hook 設定を無効化または削除してから使います。
+
 ### 既存プロジェクトへ後付け導入する場合
 
 既存 docs を一斉に検証対象にしないため、段階的導入スコープを設定します。
@@ -80,6 +92,7 @@ deno run --allow-read scripts/validate-todo.mjs
 deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs
 deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs
 deno run --allow-read --allow-env --allow-run scripts/test-validators.mjs
+deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.mjs
 ```
 
 `--allow-env` / `--allow-run=git` は段階的導入スコープ（`DD_SCOPE_BASE`）向けの権限です。スコープ未設定なら全走査の従来挙動になります。まとめて実行する場合:

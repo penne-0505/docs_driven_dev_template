@@ -49,3 +49,6 @@ jobs:
 
       - name: Test validators against fixtures
         run: deno run --allow-read --allow-env --allow-run scripts/test-validators.mjs
+
+      - name: Test agent workflow hook
+        run: deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.mjs

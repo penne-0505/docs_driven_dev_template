@@ -28,6 +28,8 @@
 
 既存プロジェクトへ後付け導入する場合は、`DD_SCOPE_BASE` に導入時点の commit を設定して「導入以降に追加した docs だけ」を検証対象に絞れます。設定方法は [Quickstart](QUICKSTART.md) と [documentation_operations.md](_docs/standards/documentation_operations.md) を参照してください。
 
+Codex / Claude Code 向けの lifecycle hook を同梱しています。hook は docs や TODO を自動更新せず、SessionStart で workflow context を再注入し、Stop で検証・整理・archive 境界の見落としを促し、PreToolUse で恒久削除や sensitive file 操作を止めるための guardrail です。利用時は各 agent の `/hooks` で内容を確認して信頼してください。
+
 root 直下の Markdown は agent 向けの active guidance として扱われます。一回限りの実装プロンプトを履歴として残す場合は `_evals/prompts/` などへ移し、非運用文書であることを明記してください。
 
 ### カスタマイズ
@@ -77,6 +79,8 @@ When creating a distribution ZIP, use GitHub's standard archive or `scripts/crea
 Use `scripts/check-docs.sh` to run the local documentation validators together.
 
 When adopting this template in an existing project, set `DD_SCOPE_BASE` to the adoption commit so that only docs added after adoption are validated. See the [Quickstart](QUICKSTART.md) and [documentation_operations.md](_docs/standards/documentation_operations.md) for setup.
+
+Lifecycle hooks for Codex and Claude Code are included. They do not update docs or TODOs automatically; they reinject workflow context on SessionStart, nudge missed verification / cleanup / archive-boundary work on Stop, and block permanent deletion or sensitive-file operations on PreToolUse. Review and trust them through each agent's `/hooks` UI before use.
 
 Root-level Markdown is treated as active guidance for agents. If you keep a one-off implementation prompt for history, move it under `_evals/prompts/` or another historical location and mark it as non-operational.
 
