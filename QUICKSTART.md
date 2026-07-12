@@ -30,7 +30,14 @@
 - Claude Code: [.claude/settings.json](.claude/settings.json)
 - 共通 script: [scripts/agent-workflow-hook.mjs](scripts/agent-workflow-hook.mjs)
 
-hook は docs を自動更新しません。SessionStart で workflow context を再注入し、Stop で `qa-review` / `docs-cleanup` / `check-docs` の見落としを促し、PreToolUse で `rm` / `git rm` / file deletion / sensitive file 操作を止めます。
+hook は docs を自動更新しません。
+
+- `SessionStart`: docs-driven workflow context を再注入します。
+- `UserPromptSubmit`: 現在の仮説を既知の証拠・反証候補と照合し、Goal / Scope / Non-Goals / Intent を再確認する短い context を毎プロンプト注入します。
+- `PreToolUse`: 書き込み前に、根本原因、呼び出し元やデータフローなどの非局所影響、短期パッチと恒久策、互換性維持期間と根拠を確認します。`rm` / `git rm` / file deletion / sensitive file 操作は止めます。
+- `Stop`: relevant change の完了時に、`qa-review` / `docs-cleanup` / `check-docs` の証跡と、反証・全体影響・長期保守性・残リスクのうち複数観点からの自己監査を確認します。
+
+自己監査は合意済み Scope を拡張する権限ではありません。広い変更が必要なら、実装へ混ぜず提案として切り分けます。また hook は guardrail であり、テスト、QA evidence、verification の代替にはなりません。ターン数カウンターは持たないため、session 再開・compact・並行実行でも同じ event 契約で動作します。
 
 初回利用時は各 agent の `/hooks` で内容を確認し、信頼してください。不要な場合は、hook 設定を無効化または削除してから使います。
 

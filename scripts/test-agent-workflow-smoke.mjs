@@ -27,17 +27,17 @@ const agentsGuide = await read("AGENTS.md");
 const hookEvents = (config) => Object.keys(config.hooks ?? {});
 
 assert(
-  ["SessionStart", "PreToolUse", "Stop"].every((event) =>
+  ["SessionStart", "UserPromptSubmit", "PreToolUse", "Stop"].every((event) =>
     hookEvents(codexHooks).includes(event)
   ),
-  "Codex hooks include SessionStart, PreToolUse, and Stop",
+  "Codex hooks include SessionStart, UserPromptSubmit, PreToolUse, and Stop",
 );
 
 assert(
-  ["SessionStart", "PreToolUse", "Stop"].every((event) =>
+  ["SessionStart", "UserPromptSubmit", "PreToolUse", "Stop"].every((event) =>
     hookEvents(claudeSettings).includes(event)
   ),
-  "Claude hooks include SessionStart, PreToolUse, and Stop",
+  "Claude hooks include SessionStart, UserPromptSubmit, PreToolUse, and Stop",
 );
 
 assert(
@@ -49,6 +49,17 @@ assert(
 assert(
   contains(agentHook, "docs-inventory", "docs-cleanup", "qa-review"),
   "workflow hook reminds agents about inventory, cleanup, and QA review",
+);
+
+assert(
+  contains(
+    agentHook,
+    "plausible counterevidence",
+    "non-local effects",
+    "long-term maintainability",
+    "silently expanding scope",
+  ),
+  "AC-001 AC-002 self-audit covers evidence, system impact, durability, and scope",
 );
 
 assert(

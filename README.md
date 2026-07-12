@@ -28,7 +28,7 @@
 
 既存プロジェクトへ後付け導入する場合は、`DD_SCOPE_BASE` に導入時点の commit を設定して、既定では「導入以降に追加した docs だけ」を検証対象に絞れます。編集した既存 docs も対象にしたい場合は `DD_SCOPE_DIFF_FILTER=ACMR` を使います。設定方法は [Quickstart](QUICKSTART.md) と [documentation_operations.md](_docs/standards/documentation_operations.md) を参照してください。
 
-Codex / Claude Code 向けの lifecycle hook を同梱しています。hook は docs や TODO を自動更新せず、SessionStart で workflow context を再注入し、Stop で検証・整理・archive 境界の見落としを促し、PreToolUse で代表的な恒久削除や sensitive file 操作を止めるための guardrail です。利用時は各 agent の `/hooks` で内容を確認して信頼してください。
+Codex / Claude Code 向けの lifecycle hook を同梱しています。hook は docs や TODO を自動更新しません。SessionStart で workflow context、UserPromptSubmit で仮説・反証・Scope の短い再確認を注入します。PreToolUse では、書き込み前に根本原因・非局所影響・恒久性・互換性の根拠を確認し、代表的な恒久削除や sensitive file 操作を止めます。Stop は、検証・複数観点の自己監査・整理・archive 境界の見落としを確認する guardrail です。利用時は各 agent の `/hooks` で内容を確認して信頼してください。
 
 久しぶりの再開や handoff 探索では、`docs-inventory` skill が TODO、intent、QA、guide、reference、一時 docs の棚卸しを行います。これは read-only の診断であり、整理や archive 実行は `docs-cleanup` の役割です。
 
@@ -82,7 +82,7 @@ Use `scripts/check-docs.sh` to run the local documentation validators together.
 
 When adopting this template in an existing project, set `DD_SCOPE_BASE` to the adoption commit. By default, only docs added after adoption are validated. Set `DD_SCOPE_DIFF_FILTER=ACMR` if edited existing docs should also become managed. See the [Quickstart](QUICKSTART.md) and [documentation_operations.md](_docs/standards/documentation_operations.md) for setup.
 
-Lifecycle hooks for Codex and Claude Code are included. They do not update docs or TODOs automatically; they reinject workflow context on SessionStart, nudge missed verification / cleanup / archive-boundary work on Stop, and block representative permanent-deletion or sensitive-file operations on PreToolUse. Review and trust them through each agent's `/hooks` UI before use.
+Lifecycle hooks for Codex and Claude Code are included. They do not update docs or TODOs automatically. SessionStart reinjects workflow context, and UserPromptSubmit adds a short check of the current hypothesis, counterevidence, and scope. Before writes, PreToolUse asks for root-cause evidence, non-local effects, durability, and an explicit compatibility rationale while blocking representative permanent-deletion or sensitive-file operations. Stop checks for verification, a multi-perspective self-audit, cleanup, and archive-boundary evidence. Review and trust them through each agent's `/hooks` UI before use.
 
 For project resumes or handoff discovery, the `docs-inventory` skill audits TODO, intent, QA, guide, reference, and temporary docs. It is a read-only diagnosis; cleanup and archive execution belong to `docs-cleanup`.
 
