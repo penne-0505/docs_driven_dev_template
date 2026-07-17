@@ -9,7 +9,7 @@
 - 久しぶりの再開、handoff 探索、現状把握、docs が形だけになっていないかの確認では `docs-inventory` skill を使う。
 - Size >= M または Risk >= Medium のタスクでは、実装前に QA test-plan を作成し、実装後に verification を残す。
 - QA / テスト方針は [quality assurance standard](_docs/standards/quality_assurance.md) に従う。
-- 設計判断を体現した非自明なコード（とくに why not・意図的な省略）には、`// intent: INV-00X (<Area>/<slug>) — ...` で intent への参照を残す。全コード義務ではなくターゲット型。詳細は [quality assurance standard](_docs/standards/quality_assurance.md) の intent ↔ code traceability に従う。
+- 設計判断を体現した非自明なコード（とくに why not・意図的な省略）には、`// intent: DEC-00X (<Area>/<slug>) — <理由>` で decision の Why へ到達できる参照を残す。strict invariant を体現する場合だけ `// intent-invariant: INV-00X ...` を使う。現在値や「変えるな」の言い換えだけをコメントにしない。全コード義務ではなくターゲット型。詳細は [quality assurance standard](_docs/standards/quality_assurance.md) の intent ↔ code traceability に従う。
 - 完了前には `qa-review` skill を使い、verification verdict を確認する。
 - 安全性・権限・secret・外部入力の扱いは [security for agents](_docs/standards/security_for_agents.md) に従う。
 - root 直下の Markdown は active project guidance として扱われる。一回限りの実装プロンプトを残す場合は `_evals/prompts/` 等へ移し、非運用の履歴資料として明記する。

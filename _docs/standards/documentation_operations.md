@@ -56,7 +56,7 @@ references:
 
 1. **標準フロー**: `draft/survey → plan → intent → qa/test-plan → implementation → qa/verification → guide/reference`
    - 大規模な変更 (`Size >= M`) や、設計判断が必要な機能追加に適用。
-   - Plan は QA Plan を含め、QA test-plan は intent-derived invariant と acceptance criteria を Test Matrix へ変換する。
+   - Plan は QA Plan を含め、QA test-plan は acceptance criteria と、存在する場合の intent-derived invariant を Test Matrix へ変換する。変更が影響する DEC は review scope として扱う。
    - `draft` / `survey` / `plan` は、対応する `intent` が存在し、archive checklist を満たす場合のみ archives へ移送できる。
 
 2. **Risk-based QA flow**:
@@ -69,7 +69,7 @@ references:
 3. **軽量フロー (Fast Track)**: `TODO定義(Steps) → 実装 → 必要なら intent/guide/reference`
    - `Size XS/S` かつ `Risk Low` の小規模修正に適用。
    - TODO 上でタスク定義、Acceptance Criteria、Steps が明確である場合、Plan / Intent / QA を `None` にできる。
-   - ただし、将来の作業者が未実装と誤認しそうな非対応・制限・省略は intentional omission risk として扱い、TODO Description / PR / commit、または必要に応じて Plan Non-Goals / Intent Alternatives に理由を残す。
+   - ただし、将来の作業者が未実装と誤認しそうな非対応・制限・省略は intentional omission risk として扱い、TODO Description / PR / commit、または必要に応じて Plan Non-Goals / Intent の DEC（Why / Why not）に理由を残す。
    - ただし、Bug / Refactor などで再発防止や挙動維持の根拠が必要な場合は、PR / commit / verification に残す。
 
 4. **QA documents のライフサイクル**
@@ -162,6 +162,15 @@ references:
 | `qa_status` | `planned` \| `in-progress` \| `verified` \| `partial` \| `failed` \| `blocked` |
 | `risk` | `Low` \| `Medium` \| `High` \| `Critical` |
 
+新しい why-first schema を使う文書は、次の marker を持つ。marker のない既存文書は legacy schema として
+引き続き受理し、一斉移行を要求しない。既存文書のリンク・typo・metadata 修正だけなら marker は不要だが、
+decision の意味または QA 契約を追加・変更する場合は対応する schema v2 へ移行する。
+
+| 対象 | フィールド | 値 |
+| --- | --- | --- |
+| `_docs/intent/**/*.md` | `intent_schema` | `2` |
+| `_docs/qa/**/*.md` | `qa_schema` | `2` |
+
 draft の stale 管理向け任意フィールド:
 
 - `stale_exempt_until: YYYY-MM-DD`
@@ -196,7 +205,8 @@ draft の stale 管理向け任意フィールド:
 - Risk level
 - QA document
 - Test strategy
-- Acceptance criteria と intent-derived invariant の確認手段
+- Acceptance criteria と、存在する場合の intent-derived invariant の確認手段
+- 影響する `DEC-xxx` の review 方針
 
 ## Deployment / Rollout
 - デプロイ手順、ロールバック方針
@@ -208,6 +218,7 @@ draft の stale 管理向け任意フィールド:
 ## Source of Intent
 ## Quality Goal
 ## Acceptance Criteria
+## Decision Review Scope
 ## Intent-derived Invariants
 ## Risk Assessment
 ## Test Strategy
@@ -227,6 +238,7 @@ draft の stale 管理向け任意フィールド:
 ## Automated Test Results
 ## Manual QA Results
 ## Acceptance Criteria Coverage
+## Decision Conformance
 ## Invariant Coverage
 ## Deferred / Not Covered
 ## Residual Risks
@@ -241,7 +253,7 @@ draft の stale 管理向け任意フィールド:
 - **`DD_SCOPE_BASE`**: 導入時点の git ref（commit / tag）を設定すると、`git diff --name-only --diff-filter=A <ref>...HEAD` で得た「追加されたファイル」のみを判定対象にする。既存ファイルは判定しない。一度導入後に既存ファイルを編集しても、既定ではスコープに入らない（追加のみ）。
 - **`DD_SCOPE_DIFF_FILTER`**: `DD_SCOPE_BASE` 使用時の git `--diff-filter` を上書きする。既定は `A`。既存 docs を編集した時点で管理対象にしたい導入先では `ACMR` を設定する。
 - **`DD_SCOPE_PATHS`**: 改行 / コロン区切りの明示パスリスト。CI で対象集合を自前計算する場合やテスト向け。優先順位は `DD_SCOPE_PATHS > DD_SCOPE_BASE > 未設定`。
-- **対象 validator**: `validate-frontmatter` / `validate-doc-links` / `validate-qa` がスコープを共有する。母集合決定は `scripts/scope.mjs` に集約されている。
+- **対象 validator**: `validate-frontmatter` / `validate-doc-links` / `validate-intent` / `validate-qa` がスコープを共有する。母集合決定は `scripts/scope.mjs` に集約されている。
 - **`TODO.md` は常時検証**: `validate-todo.mjs` はスコープの影響を受けない。運用台帳は導入時点から管理対象とする。
 - **横断チェックの扱い**: リンク / references の整合チェックは判定の起点ファイルだけをスコープで絞り、参照先の存在確認はファイルシステム全体に対して行う。新規 doc から既存 doc へのリンクは壊れない。
 - **必要権限**: スコープ対応 validator の実行には `--allow-env` を、`DD_SCOPE_BASE`（git）使用時は加えて `--allow-run=git` を付与する。権限が無い場合は安全側（全走査）へフォールバックする。
@@ -264,4 +276,4 @@ env:
 - CI ログ出力にはマスク設定を適用し、機密情報が残らないようにする。
 - 公開資料として扱える品質を前提に、OSS 化を想定した文言に統一する。
 - intent と QA docs を archive しない。
-- Deno validator (`validate-frontmatter`, `validate-todo`, `validate-doc-links`, `validate-qa`, `test-validators`) をローカルと CI で実行する。
+- Deno validator (`validate-frontmatter`, `validate-todo`, `validate-doc-links`, `validate-intent`, `validate-qa`, `test-validators`) をローカルと CI で実行する。
