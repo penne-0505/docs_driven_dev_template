@@ -23,6 +23,17 @@ const claudeInventory = await read(".claude/skills/docs-inventory/SKILL.md");
 const agentsCleanup = await read(".agents/skills/docs-cleanup/SKILL.md");
 const claudeCleanup = await read(".claude/skills/docs-cleanup/SKILL.md");
 const agentsGuide = await read("AGENTS.md");
+const intentTemplate = await read("_docs/standards/templates/intent.md");
+const qaTemplate = await read("_docs/standards/templates/qa-test-plan.md");
+const qualityStandard = await read("_docs/standards/quality_assurance.md");
+const whyFirstSkills = [
+  "implementation-prep",
+  "docs-prep",
+  "qa-prep",
+  "test-maintenance",
+  "qa-review",
+  "post-implementation",
+];
 
 const hookEvents = (config) => Object.keys(config.hooks ?? {});
 
@@ -72,6 +83,14 @@ assert(
   "docs-cleanup skill is synced across .agents and .claude",
 );
 
+for (const skill of whyFirstSkills) {
+  assert(
+    await read(`.agents/skills/${skill}/SKILL.md`) ===
+      await read(`.claude/skills/${skill}/SKILL.md`),
+    `${skill} skill is synced across .agents and .claude`,
+  );
+}
+
 assert(
   contains(agentsInventory, "read-only", "stale documentation audit"),
   "docs-inventory remains a read-only stale-doc audit entrypoint",
@@ -83,6 +102,43 @@ assert(
 );
 
 assert(
-  contains(agentsGuide, "docs-inventory", "qa-review"),
-  "AGENTS.md exposes inventory and QA review entrypoints",
+  contains(
+    agentsGuide,
+    "docs-inventory",
+    "qa-review",
+    "// intent: DEC-00X",
+    "// intent-invariant: INV-00X",
+  ),
+  "AGENTS.md exposes workflow entrypoints and targeted intent anchors",
+);
+
+assert(
+  contains(
+    intentTemplate,
+    "intent_schema: 2",
+    "### DEC-001:",
+    "**Why**:",
+    "**Change freedom**:",
+  ),
+  "intent template requires why-first DEC records",
+);
+
+assert(
+  contains(
+    qaTemplate,
+    "qa_schema: 2",
+    "## Decision Review Scope",
+    "## Intent-derived Invariants",
+    "None",
+  ),
+  "QA template reviews DEC records and permits zero invariants",
+);
+
+assert(
+  contains(
+    qualityStandard,
+    "INV が 0 件でも正常",
+    "exact 値を固定するテスト",
+  ),
+  "quality standard keeps invariants optional and rejects accidental value locks",
 );

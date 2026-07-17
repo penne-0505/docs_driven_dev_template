@@ -8,7 +8,7 @@
 
 開発サイクルはドキュメントと [TODO.md](TODO.md) によって構成されています。
 
-このテンプレートは `intent` を品質保証の一次資料として扱います。中規模以上、またはリスクのある変更では `_docs/qa/` に QA test-plan と verification を残し、テストを intent-derived invariant と acceptance criteria に紐づけます。`_docs/qa/` はテストコードの置き場ではなく、計画・対応表・検証証跡の置き場です。
+このテンプレートは `intent` を、コードを固定する規則ではなく、将来の変更者が設計判断の Why / Why not と変更可能範囲を再構成するための一次資料として扱います。中規模以上、またはリスクのある変更では `_docs/qa/` に QA test-plan と verification を残し、テストを acceptance criteria と、該当する場合だけ intent-derived invariant に紐づけます。`_docs/qa/` はテストコードの置き場ではなく、計画・対応表・検証証跡の置き場です。
 
 人がサイクルを回すことも出来ますが、基本的には**Claude Codeなどのコーディングエージェント**が、この規則に従って自律的な開発を行うために設計されました。
 
@@ -62,7 +62,7 @@ This repository is a template for Documentation Driven Development that I common
 
 The development cycle is structured around documentation and [TODO.md](TODO.md).
 
-This template treats `intent` documents as primary QA inputs. Medium-sized or risky changes keep a QA test plan and verification record under `_docs/qa/`, and tests should map back to intent-derived invariants and acceptance criteria. `_docs/qa/` is for plans, traceability, and evidence; test code belongs in the codebase's normal test locations.
+This template treats `intent` documents as the primary record of a decision's Why, Why not, and change freedom—not as rules that freeze the current code. Medium-sized or risky changes keep a QA test plan and verification record under `_docs/qa/`, and tests should map to acceptance criteria plus any genuinely durable intent-derived invariants. `_docs/qa/` is for plans, traceability, and evidence; test code belongs in the codebase's normal test locations.
 
 While humans can run the cycle, it is primarily designed **for coding agents like Claude Code** to autonomously develop according to these rules.
 

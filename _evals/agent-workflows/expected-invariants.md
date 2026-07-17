@@ -40,9 +40,12 @@
 - `deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.mjs`
 - `deno run --allow-read scripts/validate-todo.mjs`
 - `deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs`
+- `deno run --allow-read --allow-env --allow-run=git scripts/validate-intent.mjs`
 - `deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs`
 - `deno run --allow-read --allow-write --allow-env --allow-run scripts/test-validators.mjs`
 - `deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.mjs`
 - `deno run --allow-read scripts/test-agent-workflow-smoke.mjs`
 - Verification metadata must match the body verdict.
 - Validator fixtures must include both valid and intentionally invalid examples.
+- New intent records use `intent_schema: 2`, stable `DEC-*` IDs, and causal `Why`.
+- `INV-*` is optional and must not freeze a current mechanism or arbitrary value.
