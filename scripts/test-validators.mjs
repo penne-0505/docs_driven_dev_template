@@ -126,6 +126,111 @@ const runFrontmatterWithGitScope = async (env) => {
   return output.code;
 };
 
+const runFrontmatterIn = async (cwd, env) => {
+  const command = new Deno.Command(deno, {
+    args: [
+      "run",
+      "--allow-read",
+      "--allow-env",
+      "--allow-run=git",
+      `${Deno.cwd()}/scripts/validate-frontmatter.mjs`,
+    ],
+    cwd,
+    env,
+    stdout: "piped",
+    stderr: "piped",
+  });
+  const output = await command.output();
+  return output.code;
+};
+
+const runGit = async (cwd, args) => {
+  const output = await new Deno.Command("git", {
+    args,
+    cwd,
+    stdout: "piped",
+    stderr: "piped",
+  }).output();
+  if (!output.success) {
+    throw new Error(
+      `git ${args.join(" ")} failed: ${
+        new TextDecoder().decode(output.stderr)
+      }`,
+    );
+  }
+  return new TextDecoder().decode(output.stdout).trim();
+};
+
+const runCompatibilityBaselineCases = async () => {
+  const temp = await Deno.makeTempDir({
+    dir: Deno.cwd(),
+    prefix: ".docs-dd-compatibility-",
+  });
+  const legacyPath = "_docs/draft/legacy.md";
+  const retiredPath = "_docs/draft/retired.md";
+  const legacyContent = "# Legacy\n\nRemediated lint only.\n";
+  try {
+    await ensureDir(`${temp}/_docs/draft`);
+    await write(`${temp}/${legacyPath}`, "# Legacy\n");
+    await write(`${temp}/${retiredPath}`, "# Retired legacy\n");
+    await runGit(temp, ["init", "--quiet"]);
+    await runGit(temp, ["config", "user.email", "validator@example.test"]);
+    await runGit(temp, ["config", "user.name", "Validator"]);
+    await runGit(temp, ["add", "."]);
+    await runGit(temp, ["commit", "--quiet", "-m", "base"]);
+    const base = await runGit(temp, ["rev-parse", "HEAD"]);
+
+    await write(`${temp}/${legacyPath}`, legacyContent);
+    await runGit(temp, ["add", "."]);
+    await runGit(temp, ["commit", "--quiet", "-m", "lint remediation"]);
+    const blob = await runGit(temp, ["hash-object", "--", legacyPath]);
+    const retiredBlob = await runGit(temp, ["hash-object", "--", retiredPath]);
+    const manifest = `${temp}/compatibility.tsv`;
+    const writeManifest = (rows) =>
+      write(
+        manifest,
+        `path\tblob_sha1\n${
+          rows.map(([path, sha]) => `${path}\t${sha}`).join("\n")
+        }\n`,
+      );
+    await writeManifest([[legacyPath, blob], [retiredPath, retiredBlob]]);
+    const scopeEnv = {
+      DD_SCOPE_BASE: base,
+      DD_SCOPE_DIFF_FILTER: "ACMR",
+      DD_SCOPE_COMPATIBILITY_BASELINE: manifest,
+    };
+
+    if (await runFrontmatterIn(temp, scopeEnv) !== 0) return false;
+
+    await write(`${temp}/${legacyPath}`, "# Legacy\n\nContent changed.\n");
+    if (await runFrontmatterIn(temp, scopeEnv) === 0) return false;
+    await write(`${temp}/${legacyPath}`, legacyContent);
+
+    await writeManifest([["_docs/draft/unknown.md", blob]]);
+    if (await runFrontmatterIn(temp, scopeEnv) === 0) return false;
+
+    await writeManifest([[
+      legacyPath,
+      "0000000000000000000000000000000000000000",
+    ]]);
+    if (await runFrontmatterIn(temp, scopeEnv) === 0) return false;
+
+    await write(manifest, "path\tblob_sha1\nmalformed-row\n");
+    if (await runFrontmatterIn(temp, scopeEnv) === 0) return false;
+
+    await writeManifest([[legacyPath, blob], [retiredPath, retiredBlob]]);
+    await Deno.remove(`${temp}/${retiredPath}`);
+    await runGit(temp, ["add", "-u"]);
+    await runGit(temp, ["commit", "--quiet", "-m", "retire legacy doc"]);
+    if (await runFrontmatterIn(temp, scopeEnv) === 0) return false;
+
+    await writeManifest([[legacyPath, blob]]);
+    return (await runFrontmatterIn(temp, scopeEnv)) === 0;
+  } finally {
+    await Deno.remove(temp, { recursive: true });
+  }
+};
+
 const ensureDir = async (path) => {
   await Deno.mkdir(path, { recursive: true });
 };
@@ -253,6 +358,20 @@ ok = await (async () => {
     return true;
   }
   console.error(`FAIL scope DD_SCOPE_DIFF_FILTER accepts ACMR: exit ${code}`);
+  return false;
+})() && ok;
+
+ok = await (async () => {
+  const passed = await runCompatibilityBaselineCases();
+  if (passed) {
+    console.log(
+      "PASS compatibility baseline skips exact blobs, re-enters changed files, and fails closed for invalid or stale rows",
+    );
+    return true;
+  }
+  console.error(
+    "FAIL compatibility baseline did not preserve exact-blob scope or fail-closed validation",
+  );
   return false;
 })() && ok;
 
