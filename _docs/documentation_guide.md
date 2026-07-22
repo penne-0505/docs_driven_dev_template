@@ -161,6 +161,14 @@ Verdict と `qa_status` は次の対応にします。
 - 対応 intent が存在し、archive checklist を満たす場合だけ移送できます。
 - `intent` と QA docs は archive しません。
 
+### 5. Template release の継続更新
+
+- `docs-template.lock.json` は、最後に統合した upstream release tag と full SHA を記録します。
+- moving branch tip ではなく推奨 tag を `U` とし、`docs-template-migration` skill で `B` / `U` / project snapshot を比較します。
+- `U` の reconciliation と compatibility checks 後に lock を最後の migration write として更新し、closure verification で確認します。strict schema migration の延期状態は verification に残します。
+- pre-`v1.0.0` project は導入元 commit を一度だけ復元し、`v1.0.0` 以降の推奨 tag へ直接移行できます。
+- `DD_SCOPE_BASE` は導入先の validator scope であり、template provenance lock の代替にはなりません。
+
 ## 検証コマンド
 
 ```bash

@@ -33,6 +33,10 @@
 - archive checklist を満たす一時ドキュメント移送に限り `mv` / `git mv` を使える。
 - secret や `.env` 実値を diff / log に出さない。
 - Root-level one-off implementation prompts must not be treated as active guidance.
+- Template updates use a recommended release tag resolved to a full SHA, not a moving branch tip.
+- `docs-template.lock.json` advances only after the target files are reconciled and compatibility checks pass, and closure verification confirms the updated tag and full SHA.
+- A pre-`v1.0.0` project may bootstrap directly to any recommended `v1.0.0` or later release after its original template commit is identified; an intermediate migration is not required.
+- Compatibility migration and strict schema migration are reported separately.
 
 ## Validation
 

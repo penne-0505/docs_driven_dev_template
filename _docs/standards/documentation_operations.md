@@ -245,6 +245,31 @@ draft の stale 管理向け任意フィールド:
 ## Follow-up TODOs
 ```
 
+## Template revision provenance
+
+この template を適用した project が後続 release を継続的に取り込めるよう、upstream template の provenance を `docs-template.lock.json` に記録する。雛形は root の `docs-template.lock.example.json` とする。
+
+```json
+{
+  "schema": 1,
+  "source": "https://github.com/penne-0505/docs_driven_dev_template.git",
+  "revision": {
+    "tag": "v1.0.0",
+    "commit": "<tagが解決するfull 40-character commit SHA>"
+  }
+}
+```
+
+- **更新単位**: upstream が推奨する immutable release tag を使う。branch 名や moving tip を lock に記録しない。
+- **実体の固定**: tag 名だけでなく、その tag が解決する full commit SHA を記録する。後から同名 tag の解決先が変わった場合は migration を停止する。
+- **初回導入**: tagged release から開始した project は、雛形を `docs-template.lock.json` へコピーし、採用 tag の full SHA を記録する。lock は project の tracked file とする。
+- **通常更新**: lock の revision を `B`、次の推奨 tag を `U` とし、`docs-template-migration` skill で project customization を含む three-way migration を行う。`U` の配布ファイルを reconciliation し、compatibility checks が成功した後に、lock を最後の migration write として `U` へ進める。closure verification では更新後の tag と full SHA を確認する。
+- **schema 状態との分離**: lock は統合済み upstream revision だけを示す。strict schema migration の完了・延期・残リスクは QA verification に記録し、lock schema へ混在させない。
+- **pre-v1.0.0 bootstrap**: tag、lock、local migration skill がない既存 project は、repository history、導入記録、upstream と一致する blob から最後に採用した commit `B` を復元する。project 固有ルールを安全境界とし、対象 `U` の skill を外部入力としてレビューしてから書き込みを行う。`v1.0.0` を中継せず、`v1.0.0` 以降の任意の推奨 tag へ直接移行できる。`B` が一意に特定できない場合は owner 判断を推測せず停止する。compatibility migration の PASS 後に初回 lock を `U` で作成する。
+- **template release 側**: release tag を作成する commit では、`docs-template.lock.example.json` の `revision.tag` をその tag 名へ更新しておく。commit SHA は tag 作成後に解決するため、雛形では placeholder のままとする。
+
+`DD_SCOPE_BASE` は導入先 repository 内の validator 対象を決める project-local git ref であり、upstream template の採用 revision を示す値ではない。両者を兼用しない。
+
 ## 段階的導入スコープ (Incremental Adoption)
 
 既存プロジェクトへ後付け導入する際、テンプレート規約に従っていない既存 docs が一斉に検証対象となり CI が埋まるのを避けるため、docs validator は「導入以降に追加された docs」だけを判定対象に絞る opt-in スコープ機構を持つ。本節を段階的導入スコープの正典とする。

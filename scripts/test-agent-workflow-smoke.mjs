@@ -20,9 +20,20 @@ const claudeSettings = await json(".claude/settings.json");
 const agentHook = await read("scripts/agent-workflow-hook.mjs");
 const agentsInventory = await read(".agents/skills/docs-inventory/SKILL.md");
 const claudeInventory = await read(".claude/skills/docs-inventory/SKILL.md");
+const agentsMigration = await read(
+  ".agents/skills/docs-template-migration/SKILL.md",
+);
+const claudeMigration = await read(
+  ".claude/skills/docs-template-migration/SKILL.md",
+);
 const agentsCleanup = await read(".agents/skills/docs-cleanup/SKILL.md");
 const claudeCleanup = await read(".claude/skills/docs-cleanup/SKILL.md");
 const agentsGuide = await read("AGENTS.md");
+const quickstart = await read("QUICKSTART.md");
+const documentationOperations = await read(
+  "_docs/standards/documentation_operations.md",
+);
+const templateLockExample = await json("docs-template.lock.example.json");
 const intentTemplate = await read("_docs/standards/templates/intent.md");
 const qaTemplate = await read("_docs/standards/templates/qa-test-plan.md");
 const qualityStandard = await read("_docs/standards/quality_assurance.md");
@@ -79,6 +90,11 @@ assert(
 );
 
 assert(
+  agentsMigration === claudeMigration,
+  "docs-template-migration skill is synced across .agents and .claude",
+);
+
+assert(
   agentsCleanup === claudeCleanup,
   "docs-cleanup skill is synced across .agents and .claude",
 );
@@ -97,6 +113,62 @@ assert(
 );
 
 assert(
+  contains(
+    agentsMigration,
+    "three-way migration",
+    "recommended upstream release tag",
+    "full commit SHA",
+    "docs-template.lock.json",
+    "Legacy bootstrap for pre-v1.0.0 repositories",
+    "directly to any selected release `U >= v1.0.0`",
+    "does not need an intermediate",
+    "premature lock",
+    "advancement",
+    "bulk schema edits",
+    "Completion criterion",
+  ),
+  "docs-template-migration preserves provenance, legacy bootstrap, and staged schema boundaries",
+);
+
+const migrationSteps = agentsMigration
+  .split(/^### \d+\..*$/m)
+  .slice(1);
+assert(
+  migrationSteps.length === 6 &&
+    migrationSteps.every((step) => step.includes("Completion criterion:")),
+  "every docs-template-migration step has a completion criterion",
+);
+
+assert(
+  templateLockExample.schema === 1 &&
+    templateLockExample.source ===
+      "https://github.com/penne-0505/docs_driven_dev_template.git" &&
+    templateLockExample.revision?.tag === "v1.0.0" &&
+    templateLockExample.revision?.commit ===
+      "REPLACE_WITH_THE_TAGS_FULL_40_CHARACTER_COMMIT_SHA",
+  "template lock example identifies the v1.0.0 release and full-SHA placeholder",
+);
+
+assert(
+  contains(
+    quickstart,
+    "Template の継続更新",
+    "`v1.0.0` より前",
+    "任意の推奨 tag へ直接移行",
+    "`DD_SCOPE_BASE` は導入先 repository 内",
+  ) &&
+    contains(
+      documentationOperations,
+      "Template revision provenance",
+      "compatibility checks",
+      "closure verification",
+      "strict schema migration",
+      "pre-v1.0.0 bootstrap",
+    ),
+  "reader docs separate template provenance, legacy bootstrap, and validator scope",
+);
+
+assert(
   contains(agentsCleanup, "Archive Checklist", "Do not archive"),
   "docs-cleanup keeps archive boundary guidance",
 );
@@ -105,6 +177,9 @@ assert(
   contains(
     agentsGuide,
     "docs-inventory",
+    "docs-template-migration",
+    "release tag",
+    "docs-template.lock.json",
     "qa-review",
     "// intent: DEC-00X",
     "// intent-invariant: INV-00X",

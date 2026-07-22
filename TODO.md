@@ -2,7 +2,7 @@
 
 ## 0. System Metadata
 
-- **Current Max ID**: `Next ID No: 10` (タスク追加時にインクリメント必須)
+- **Current Max ID**: `Next ID No: 12` (タスク追加時にインクリメント必須)
 - **ID Source of Truth**: このファイルの `Next ID No` 行が、全プロジェクトにおける唯一の ID 発番元である。
 
 ## 1. Task Lifecycle (State Machine)
@@ -402,6 +402,32 @@ Risk の詳細は `_docs/standards/quality_assurance.md` を参照する。
 - **Description**:
   - Context: 新規プロジェクトでは不要。既存プロジェクトへ後付け導入する場合のみ着手する条件付きタスク。導入しない場合はこのタスクを削除してよい。
   - Notes: 手順は QUICKSTART「既存プロジェクトへ後付け導入する場合」と `_docs/standards/documentation_operations.md` の段階的導入スコープを参照。`Size XS` かつ `Risk Low` のため Plan / Intent / QA は不要。
+- **Plan**: None
+- **Intent**: None
+- **QA**: None
+- **Verification**: None
+
+### Workflow-Chore-11: [Chore] Record template revision provenance
+
+- **Title**: [Chore] Record template revision provenance
+- **ID**: Workflow-Chore-11
+- **Priority**: P1
+- **Size**: XS
+- **Risk**: Low
+- **Area**: Workflow
+- **Dependencies**: []
+- **Goal**: 採用した docs-driven template release の tag と full SHA が、後続 migration で再利用できる形で記録されている。
+- **Acceptance Criteria**:
+  - AC-001: `docs-template.lock.example.json` から `docs-template.lock.json` が作成され、採用した release tag とその tag が解決する full 40-character commit SHA を記録している。
+  - AC-002: lock の `source` が実際の upstream template repository を指し、moving branch tip を revision として使用していない。
+- **Steps**:
+  1. [ ] 採用した template release tag を確認する
+  2. [ ] tag が解決する full commit SHA を確認する
+  3. [ ] 雛形を `docs-template.lock.json` へコピーして source / tag / commit を記録する
+  4. [ ] tag と full SHA の対応を再確認する
+- **Description**:
+  - Context: downstream project が template の推奨更新を three-way migration で継続的に取り込むための provenance lock。
+  - Notes: `DD_SCOPE_BASE` は project 内の validator scope であり、この lock の代替ではない。pre-`v1.0.0` project は最初の migration 完了時に lock を作成する。`Size XS` かつ `Risk Low` のため Plan / Intent / QA は不要。
 - **Plan**: None
 - **Intent**: None
 - **QA**: None

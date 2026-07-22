@@ -38,6 +38,7 @@
 - [rationale-preserving-change](cases/rationale-preserving-change.md)
 - [misleading-optimization](cases/misleading-optimization.md)
 - [experimental-baseline](cases/experimental-baseline.md)
+- [template-version-migration](cases/template-version-migration.md)
 
 ## Expected Invariants
 
