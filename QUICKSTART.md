@@ -29,7 +29,7 @@
 
 - Codex: [.codex/hooks.json](.codex/hooks.json)
 - Claude Code: [.claude/settings.json](.claude/settings.json)
-- 共通 script: [scripts/agent-workflow-hook.mjs](scripts/agent-workflow-hook.mjs)
+- 共通 script: [scripts/agent-workflow-hook.ts](scripts/agent-workflow-hook.ts)
 
 hook は docs を自動更新しません。
 
@@ -122,15 +122,15 @@ Use TODO.md as the task source of truth. For Size >= M or Risk >= Medium tasks, 
 ## 5. 検証コマンド
 
 ```bash
-deno fmt --check scripts/*.mjs
-deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.mjs
-deno run --allow-read scripts/validate-todo.mjs
-deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.mjs
-deno run --allow-read --allow-env --allow-run=git scripts/validate-intent.mjs
-deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.mjs
-deno run --allow-read --allow-write --allow-env --allow-run scripts/test-validators.mjs
-deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.mjs
-deno run --allow-read scripts/test-agent-workflow-smoke.mjs
+deno fmt --check scripts/*.ts
+deno run --allow-read --allow-env --allow-run=git scripts/validate-frontmatter.ts
+deno run --allow-read scripts/validate-todo.ts
+deno run --allow-read --allow-env --allow-run=git scripts/validate-doc-links.ts
+deno run --allow-read --allow-env --allow-run=git scripts/validate-intent.ts
+deno run --allow-read --allow-env --allow-run=git scripts/validate-qa.ts
+deno run --allow-read --allow-write --allow-env --allow-run scripts/test-validators.ts
+deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.ts
+deno run --allow-read scripts/test-agent-workflow-smoke.ts
 ```
 
 `--allow-env` / `--allow-run=git` は段階的導入スコープ（`DD_SCOPE_BASE`）向けの権限です。スコープ未設定なら全走査の従来挙動になります。まとめて実行する場合:

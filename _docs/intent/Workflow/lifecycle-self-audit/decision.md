@@ -60,11 +60,11 @@ related_prs: []
 
 ## Enforced in
 
-- INV-001: `scripts/agent-workflow-hook.mjs` の `UserPromptSubmit` 出力と unit test。
-- INV-002: `scripts/agent-workflow-hook.mjs` の書き込み系 `PreToolUse` 出力と unit test。
-- INV-003: `scripts/agent-workflow-hook.mjs` の `Stop` 判定と unit test。
+- INV-001: `scripts/agent-workflow-hook.ts` の `UserPromptSubmit` 出力と unit test。
+- INV-002: `scripts/agent-workflow-hook.ts` の書き込み系 `PreToolUse` 出力と unit test。
+- INV-003: `scripts/agent-workflow-hook.ts` の `Stop` 判定と unit test。
 - INV-004: `.codex/hooks.json`、`.claude/settings.json`、smoke test。
-- INV-005: `scripts/test-agent-workflow-hook.mjs` の regression checks。
+- INV-005: `scripts/test-agent-workflow-hook.ts` の regression checks。
 
 ## Rollback / Follow-ups
 

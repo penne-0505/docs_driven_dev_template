@@ -62,11 +62,11 @@ related_prs: []
 
 | ID | Source | Requirement / Invariant | Test Type | Command / File | Expected Evidence | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| AC-001 / INV-001 | TODO / intent | 両 agent が短い毎プロンプト context を共有する | unit + smoke | `scripts/test-agent-workflow-{hook,smoke}.mjs` | `UserPromptSubmit` と context 内容が PASS | verified |
-| AC-002 / INV-002 | TODO / intent | 書き込み前に具体的監査を行い Scope を越えない | unit | `scripts/test-agent-workflow-hook.mjs` | write tool は context、read tool は追加なし | verified |
-| AC-003 / INV-003 | TODO / intent | 完了時に検証と複数観点の監査を要求する | unit | `scripts/test-agent-workflow-hook.mjs` | evidence 不足は block、充足時は allow | verified |
-| AC-004 / INV-004 | TODO / intent | 共通 script、状態非保持、設定同期 | smoke + diff review | `scripts/test-agent-workflow-smoke.mjs` | 両設定の4イベントと同じ command が PASS | verified |
-| INV-005 | intent | 既存 safety / closure guard を維持する | regression | `scripts/test-agent-workflow-hook.mjs` | deletion / secret / recursive Stop checks が PASS | verified |
+| AC-001 / INV-001 | TODO / intent | 両 agent が短い毎プロンプト context を共有する | unit + smoke | `scripts/test-agent-workflow-{hook,smoke}.ts` | `UserPromptSubmit` と context 内容が PASS | verified |
+| AC-002 / INV-002 | TODO / intent | 書き込み前に具体的監査を行い Scope を越えない | unit | `scripts/test-agent-workflow-hook.ts` | write tool は context、read tool は追加なし | verified |
+| AC-003 / INV-003 | TODO / intent | 完了時に検証と複数観点の監査を要求する | unit | `scripts/test-agent-workflow-hook.ts` | evidence 不足は block、充足時は allow | verified |
+| AC-004 / INV-004 | TODO / intent | 共通 script、状態非保持、設定同期 | smoke + diff review | `scripts/test-agent-workflow-smoke.ts` | 両設定の4イベントと同じ command が PASS | verified |
+| INV-005 | intent | 既存 safety / closure guard を維持する | regression | `scripts/test-agent-workflow-hook.ts` | deletion / secret / recursive Stop checks が PASS | verified |
 | AC-004 | TODO | docs 契約が構造的に妥当 | validator | `./scripts/check-docs.sh` | 全 validator が exit 0 | verified |
 
 ## Manual QA Checklist

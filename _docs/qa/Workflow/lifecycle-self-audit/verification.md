@@ -27,9 +27,9 @@ Verdict: PASS
 ## Commands Run
 
 ```bash
-deno fmt scripts/agent-workflow-hook.mjs scripts/test-agent-workflow-hook.mjs scripts/test-agent-workflow-smoke.mjs
-deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.mjs
-deno run --allow-read scripts/test-agent-workflow-smoke.mjs
+deno fmt scripts/agent-workflow-hook.ts scripts/test-agent-workflow-hook.ts scripts/test-agent-workflow-smoke.ts
+deno run --allow-read --allow-run=git scripts/test-agent-workflow-hook.ts
+deno run --allow-read scripts/test-agent-workflow-smoke.ts
 ./scripts/check-docs.sh
 npx markdownlint-cli2 "_docs/**/*.md" "_evals/**/*.md" "README.md" "AGENTS.md" "TODO.md" "QUICKSTART.md" "!_docs/archives/**/*" "!_docs/standards/templates/**/*" --config .markdownlint.jsonc
 ```
@@ -47,8 +47,8 @@ Markdownlint: PASS (44 files, 0 errors)
 
 | Command / Test | Result | Notes |
 | --- | --- | --- |
-| `scripts/test-agent-workflow-hook.mjs` | PASS | short prompt context、write/read 分岐、Stop の audit gate、既存 deny を確認 |
-| `scripts/test-agent-workflow-smoke.mjs` | PASS | Codex / Claude Code の4イベントと共有 script を確認 |
+| `scripts/test-agent-workflow-hook.ts` | PASS | short prompt context、write/read 分岐、Stop の audit gate、既存 deny を確認 |
+| `scripts/test-agent-workflow-smoke.ts` | PASS | Codex / Claude Code の4イベントと共有 script を確認 |
 | `./scripts/check-docs.sh` | PASS | formatter、validator fixtures、hook unit / smoke を通過 |
 | `npx markdownlint-cli2 ...` | PASS | 44 files、0 errors |
 
