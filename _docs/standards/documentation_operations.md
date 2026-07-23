@@ -254,7 +254,7 @@ draft の stale 管理向け任意フィールド:
   "schema": 1,
   "source": "https://github.com/penne-0505/docs_driven_dev_template.git",
   "revision": {
-    "tag": "v1.0.0",
+    "tag": "v1.1.0",
     "commit": "<tagが解決するfull 40-character commit SHA>"
   }
 }
